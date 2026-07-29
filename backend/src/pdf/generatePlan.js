@@ -300,7 +300,7 @@ function renderAssessment(d, feedback) {
   }
 }
 
-export async function generatePlanPdf(session) {
+export async function generatePlanPdf(session, { analysis = null } = {}) {
   const doc = await PDFDocument.create();
   const regular = await doc.embedFont(StandardFonts.Helvetica);
   const bold = await doc.embedFont(StandardFonts.HelveticaBold);
@@ -500,6 +500,32 @@ export async function generatePlanPdf(session) {
     d.y -= 8;
     d.paragraph(
       'This projection is arithmetic on the figures you supplied, not a forecast or a guarantee. Real results depend on demand, pricing power, and how quickly you can actually win customers. Treat it as a way to test whether your assumptions hold together.',
+      { size: 9.5, color: MUTED }
+    );
+  }
+
+  /* ---------- Strengths and risks ---------- */
+  if (analysis && (analysis.strengths.length || analysis.risks.length)) {
+    d.newPage();
+    d.sectionTitle('Strengths & Risks');
+    d.paragraph(
+      'An honest read of what works in your favour and what could go wrong, based on your own answers and figures.',
+      { gap: 18 }
+    );
+
+    if (analysis.strengths.length) {
+      d.subheading('What works in your favour');
+      analysis.strengths.forEach((s) => d.bullet(s));
+      d.y -= 12;
+    }
+    if (analysis.risks.length) {
+      d.subheading('What could go wrong');
+      analysis.risks.forEach((r) => d.bullet(r));
+    }
+
+    d.y -= 10;
+    d.paragraph(
+      'These points are a prompt for your own thinking, not a verdict on the business. Work through the risks before committing money.',
       { size: 9.5, color: MUTED }
     );
   }

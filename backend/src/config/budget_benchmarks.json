@@ -1,0 +1,20 @@
+{
+  "disclaimer": "These are rough, non-binding estimates for early planning only. Confirm exact figures with the relevant free zone authority or the Dubai Department of Economy and Tourism (DED) before acting.",
+  "trade_license": {
+    "mainland": { "min": 12000, "max": 25000, "currency": "AED", "unit": "per year" },
+    "free_zone": { "min": 8000, "max": 20000, "currency": "AED", "unit": "per year" },
+    "offshore": { "min": 6000, "max": 15000, "currency": "AED", "unit": "per year" }
+  },
+  "visa_cost_per_person": { "min": 3500, "max": 7500, "currency": "AED", "unit": "per visa" },
+  "space": {
+    "none": { "min": 0, "max": 0, "currency": "AED", "unit": "per year" },
+    "flexi-desk": { "min": 6000, "max": 15000, "currency": "AED", "unit": "per year" },
+    "office": { "min": 20000, "max": 80000, "currency": "AED", "unit": "per year" },
+    "retail": { "min": 50000, "max": 200000, "currency": "AED", "unit": "per year" }
+  },
+  "marketing": {
+    "low": { "min": 1000, "max": 3000, "currency": "AED", "unit": "per month" },
+    "medium": { "min": 3000, "max": 10000, "currency": "AED", "unit": "per month" },
+    "high": { "min": 10000, "max": 30000, "currency": "AED", "unit": "per month" }
+  }
+}

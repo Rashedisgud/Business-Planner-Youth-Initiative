@@ -1,0 +1,12 @@
+import OpenAI from 'openai';
+
+const apiKey = process.env.OPENAI_API_KEY;
+
+if (!apiKey) {
+  throw new Error(
+    'Missing OPENAI_API_KEY. Copy backend/.env.example to backend/.env and add your OpenAI API key.'
+  );
+}
+
+export const openai = new OpenAI({ apiKey });
+export const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';

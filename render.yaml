@@ -1,0 +1,28 @@
+# Render Blueprint for the BPYI backend.
+# In Render: New -> Blueprint -> connect this repo. Render reads this file and
+# creates the service. Secrets are marked sync:false so Render prompts you to
+# paste them instead of storing them in the repo.
+services:
+  - type: web
+    name: bpyi-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      # Comma-separated list of every hostname the site is served from,
+      # e.g. https://bpyi.com,https://www.bpyi.com
+      - key: FRONTEND_URL
+        sync: false

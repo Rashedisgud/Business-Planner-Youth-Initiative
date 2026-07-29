@@ -1,0 +1,21 @@
+[
+  { "stage": 1, "key": "idea", "prompt": "What's the business idea in one sentence?" },
+  { "stage": 1, "key": "target_customer", "prompt": "Who is the target customer?" },
+  { "stage": 1, "key": "problem", "prompt": "What problem does it solve for them?" },
+  { "stage": 1, "key": "competitors", "prompt": "Who are 2-3 competitors or similar existing businesses (in UAE if known)?" },
+  { "stage": 1, "key": "revenue_model", "prompt": "How will it make money?" },
+
+  { "stage": 2, "key": "problem_solution", "prompt": "Let's build the full plan. First: describe the problem you're solving and your solution in more detail." },
+  { "stage": 2, "key": "target_market", "prompt": "Who is your target market and customer, in more detail than before?" },
+  { "stage": 2, "key": "product", "prompt": "Describe your product or service." },
+  { "stage": 2, "key": "revenue_model", "prompt": "How exactly will you generate revenue? Describe pricing and model." },
+  { "stage": 2, "key": "marketing_plan", "prompt": "How will you acquire customers?" },
+  { "stage": 2, "key": "team", "prompt": "Who's on the team - solo, co-founders, or planned hires?" },
+  { "stage": 2, "key": "setup_type", "prompt": "UAE setup preference: mainland, free zone, or offshore? If you're not sure, say so and I'll explain the difference, then you can choose." },
+
+  { "stage": 3, "key": "industry", "prompt": "Now let's estimate your budget. What industry/business type is this?" },
+  { "stage": 3, "key": "team_size", "prompt": "Solo or team? How many visas will you need?" },
+  { "stage": 3, "key": "setup_type", "prompt": "Confirm your preferred setup type (mainland/free zone/offshore)." },
+  { "stage": 3, "key": "space_needs", "prompt": "Physical space needs: none, flexi-desk, office, or retail?" },
+  { "stage": 3, "key": "marketing_budget", "prompt": "What's your rough marketing budget expectation (monthly, in AED)?" }
+]

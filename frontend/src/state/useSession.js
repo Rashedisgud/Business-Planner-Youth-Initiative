@@ -20,7 +20,10 @@ function buildTranscript(session) {
     const answers = session[`stage${stage}_answers`] || {};
     const questions = questionsForStage(stage);
     const answeredAny = questions.some((q) => answers[q.key]);
-    if (!answeredAny) continue;
+    // Show the intro as soon as someone reaches a stage, not just once they've
+    // answered something - otherwise a brand new chat opens on a bare question
+    // with no greeting.
+    if (!answeredAny && session.current_stage !== stage) continue;
 
     messages.push({ id: `intro-${stage}`, role: 'bot', text: STAGE_INTROS[stage] });
     for (const q of questions) {

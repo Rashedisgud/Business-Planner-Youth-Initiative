@@ -93,11 +93,15 @@ Then follow the "push an existing repository" commands GitHub shows you. `.gitig
 
 ### 4. Buy and connect the domain
 
-1. Buy `bpyi.org` from any registrar (Namecheap, Cloudflare, GoDaddy, etc.). You have to do this part yourself — it needs your payment details. Expect roughly $10-15/year for a `.org`.
-2. In Vercel: **Project → Settings → Domains → Add**, enter `bpyi.org`.
-3. Vercel shows you the exact DNS records to create. Add them at your registrar:
-   - Apex domain (`bpyi.org`) → usually an **A record** to Vercel's IP
-   - `www` → usually a **CNAME** to `cname.vercel-dns.com`
+The domain `bypi.org` is registered through **AEserver** — DNS is managed at https://my.aeserver.com (Client Area → your domain → DNS Zone Manager).
+
+> Note: the domain reads `bypi` while the brand acronym is `BPYI` (Business Planner Youth Initiative). This is a known, deliberate inconsistency — the site copy says BPYI throughout.
+
+1. In Vercel: **Project → Settings → Domains → Add**, enter `bypi.org`. Repeat for `www.bypi.org`.
+2. Vercel shows you the exact DNS records to create. Add them in AEserver's DNS Zone Manager:
+   - Apex domain (`bypi.org`) → an **A record**, host `@`, pointing to the IP Vercel gives you (currently `76.76.21.21`)
+   - `www` → a **CNAME**, host `www`, pointing to `cname.vercel-dns.com`
+   - Always use the values Vercel shows you rather than these, in case they change.
 4. Wait for DNS to propagate (minutes to a few hours). Vercel issues the HTTPS certificate automatically.
 
 ### 5. Point the backend at the real domain (don't skip this)
@@ -105,14 +109,14 @@ Then follow the "push an existing repository" commands GitHub shows you. `.gitig
 Back in Render → your service → Environment, set `FRONTEND_URL` to every hostname the site is reachable on, comma-separated, with no trailing slashes:
 
 ```
-https://bpyi.org,https://www.bpyi.org
+https://bypi.org,https://www.bypi.org
 ```
 
 Then redeploy. **If you skip this, the site will load but every request will fail** — the backend rejects browser requests from origins it doesn't recognise. If that happens you'll see a clear error: *"This site is not allowed to call the API. Check FRONTEND_URL on the backend."*
 
 ### 6. Update Supabase auth URLs
 
-Supabase → Authentication → URL Configuration → set **Site URL** to `https://bpyi.org` and add it under **Redirect URLs**. Without this, sign-up confirmation emails will link back to localhost.
+Supabase → Authentication → URL Configuration → set **Site URL** to `https://bypi.org` and add it under **Redirect URLs**. Without this, sign-up confirmation emails will link back to localhost.
 
 ### Post-launch checklist
 

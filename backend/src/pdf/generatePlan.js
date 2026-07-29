@@ -37,6 +37,45 @@ const SECTION_LABELS = {
   setup_type: 'UAE Setup Preference',
 };
 
+// The standard PDF fonts encode WinAnsi only - Latin-1 plus these typographic
+// extras. Drawing anything else throws, which previously killed the whole
+// download for anyone who typed Arabic or an emoji.
+const WINANSI_EXTRAS = new Set([
+  0x20ac, 0x201a, 0x0192, 0x201e, 0x2026, 0x2020, 0x2021, 0x02c6, 0x2030, 0x0160,
+  0x2039, 0x0152, 0x017d, 0x2018, 0x2019, 0x201c, 0x201d, 0x2022, 0x2013, 0x2014,
+  0x02dc, 0x2122, 0x0161, 0x203a, 0x0153, 0x017e, 0x0178,
+]);
+
+/**
+ * Strips characters the built-in fonts cannot draw. Losing an emoji is a fair
+ * trade for the document still being produced; text in another script is
+ * flagged rather than silently vanishing, so nobody is left wondering where
+ * their answer went.
+ */
+const UNRENDERABLE = '[Written in a script this PDF cannot display - it is saved on your plan.]';
+
+function pdfSafe(text) {
+  if (text === null || text === undefined) return '';
+  const input = String(text);
+  let out = '';
+  let dropped = 0;
+
+  for (const ch of input) {
+    const cp = ch.codePointAt(0);
+    if (ch === '\n' || ch === '\r') {
+      out += '\n';
+    } else if ((cp >= 0x20 && cp <= 0x7e) || (cp >= 0xa0 && cp <= 0xff) || WINANSI_EXTRAS.has(cp)) {
+      out += ch;
+    } else {
+      dropped += 1;
+    }
+  }
+
+  // Everything meaningful was in a script this document can't render.
+  if (dropped > 0 && !out.replace(/[\s.,;:!?-]/g, '')) return UNRENDERABLE;
+  return out;
+}
+
 /**
  * The cover title is whatever someone typed as their idea, which is meant to be
  * one sentence but can be a paragraph. Step the size down to try to fit, then
@@ -56,7 +95,7 @@ function fitCoverTitle(text, font, maxWidth, maxLines) {
 
 function wrapText(text, font, size, maxWidth) {
   const lines = [];
-  for (const paragraph of String(text).split('\n')) {
+  for (const paragraph of pdfSafe(text).split('\n')) {
     if (!paragraph.trim()) {
       lines.push('');
       continue;
@@ -80,7 +119,12 @@ class Doc {
   constructor(doc, fonts, businessName) {
     this.doc = doc;
     this.fonts = fonts;
-    this.businessName = businessName;
+    // Sanitised once here because the running header measures this string, and
+    // measuring throws on unsupported characters just as drawing does. If the
+    // name was entirely in another script, repeating the long explanation at the
+    // top of every page reads as an error, so the header stays generic.
+    const safeName = pdfSafe(businessName);
+    this.businessName = safeName === UNRENDERABLE ? 'Business Plan' : safeName;
     this.page = null;
     this.y = 0;
     this.isFirstContentPage = true;
@@ -145,7 +189,7 @@ class Doc {
   sectionTitle(text) {
     // Avoid a title stranded at the bottom of a page.
     this.ensureSpace(70);
-    this.page.drawText(text, {
+    this.page.drawText(pdfSafe(text), {
       x: MARGIN,
       y: this.y - 14,
       size: 17,
@@ -164,7 +208,7 @@ class Doc {
 
   subheading(text) {
     this.ensureSpace(40);
-    this.page.drawText(text, {
+    this.page.drawText(pdfSafe(text), {
       x: MARGIN,
       y: this.y,
       size: 11.5,
@@ -265,7 +309,7 @@ class Doc {
     const font = opts.bold ? this.fonts.bold : this.fonts.regular;
     const color = opts.color ?? INK;
     cols.forEach((col, i) => {
-      const text = String(col);
+      const text = pdfSafe(col);
       // Figures read better right-aligned so the digits line up.
       const x =
         i === 0 ? xs[i] : xs[i] - font.widthOfTextAtSize(text, size);

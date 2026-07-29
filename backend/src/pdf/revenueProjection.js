@@ -26,16 +26,31 @@ function parseNumber(text) {
 }
 
 /**
- * Distinguish "they pay monthly" from "one off". Checked against the negative
- * phrasings first, since "not a subscription" contains "subscription".
+ * Distinguish "they pay monthly" from "one off". This decides whether revenue
+ * accumulates or stays flat, so getting it wrong changes the projection
+ * enormously - the terms are matched on their stems because "monthly",
+ * "annually" and "renewals" all mean the same thing here and an exact word
+ * match misses every one of them.
  */
 function looksRecurring(text) {
   if (typeof text !== 'string') return false;
   const t = text.toLowerCase();
-  if (/\b(one[\s-]?off|once|single|not recurring|no subscription|one time)\b/.test(t)) {
+
+  // "once a month" is recurring despite containing "once", so it is settled
+  // before the one-off phrasings below.
+  if (/\bonce\s+(a|per|every)\b/.test(t)) return true;
+
+  if (
+    /\b(one[\s-]?off|one[\s-]?time|single purchase|single payment|not recurring|no subscription|only once|just once|pay once)\b/.test(
+      t
+    )
+  ) {
     return false;
   }
-  return /\b(month|recurring|subscription|retainer|repeat|again|ongoing|annual|renew)\b/.test(t);
+
+  return /\b(month|recur|subscri|retainer|repeat|ongoing|annual|renew|every week|each week|weekly|regular)/.test(
+    t
+  );
 }
 
 export function computeProjection(stage3 = {}, budget = null) {

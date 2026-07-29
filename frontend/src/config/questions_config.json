@@ -11,11 +11,11 @@
   { "stage": 2, "key": "revenue_model", "prompt": "How exactly will you generate revenue? Describe pricing and model." },
   { "stage": 2, "key": "marketing_plan", "prompt": "How will you acquire customers?" },
   { "stage": 2, "key": "team", "prompt": "Who's on the team - solo, co-founders, or planned hires?" },
-  { "stage": 2, "key": "setup_type", "prompt": "UAE setup preference: mainland, free zone, or offshore? If you're not sure, say so and I'll explain the difference, then you can choose." },
+  { "stage": 2, "key": "setup_type", "prompt": "Which UAE setup suits you best - mainland, free zone, or offshore? Here's a quick guide if these are new to you, and just ask if anything's unclear." },
 
   { "stage": 3, "key": "industry", "prompt": "Now let's estimate your budget. What industry/business type is this?" },
   { "stage": 3, "key": "team_size", "prompt": "Solo or team? How many visas will you need?" },
-  { "stage": 3, "key": "setup_type", "prompt": "Confirm your preferred setup type (mainland/free zone/offshore)." },
+  { "stage": 3, "key": "setup_type", "prompt": "Just to confirm for the budget - mainland, free zone, or offshore?" },
   { "stage": 3, "key": "space_needs", "prompt": "Physical space needs: none, flexi-desk, office, or retail?" },
   { "stage": 3, "key": "marketing_budget", "prompt": "What's your rough marketing budget expectation (monthly, in AED)?" },
   { "stage": 3, "key": "avg_sale_value", "prompt": "Now a few numbers so I can project your revenue. On average, how much will one customer pay you at a time, in AED?" },

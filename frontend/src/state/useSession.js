@@ -5,13 +5,36 @@ import questionsConfig from '../config/questions_config.json';
 const STORAGE_KEY = 'byi_session_id';
 
 const STAGE_INTROS = {
-  1: "Hi! I'll help you sanity-check your business idea, then build a full plan and budget. Let's start with the idea itself.",
-  2: "Great, let's build the full business plan. I'll ask a few sections one at a time.",
-  3: "Last step: a rough budget estimate for setting up in the UAE.",
+  1: "Hi, welcome! I'll help you sanity-check your business idea, then build a full plan and budget together. There are no wrong answers here - just tell me what you're thinking. Let's start with the idea itself.",
+  2: "Nice work - that's the hardest part done. Now let's build out the full business plan. I'll take it one section at a time, and short answers are completely fine.",
+  3: "Almost there! Last step is a rough budget for setting up in the UAE. Don't worry about being precise - your best guess is genuinely enough.",
 };
 
 function questionsForStage(stage) {
   return questionsConfig.filter((q) => q.stage === stage);
+}
+
+/**
+ * Short reference shown right alongside a question, automatically - a user
+ * shouldn't have to type "explain" or "not sure" just to get a plain-language
+ * definition of terms most first-time founders won't know.
+ */
+const QUESTION_HINTS = {
+  // Keyed by stage and question key. Stage 3 re-confirms the setup type, so the
+  // guide is attached only to stage 2 where the choice is actually made -
+  // repeating the whole thing would just be clutter.
+  '2:setup_type': [
+    'Quick guide:',
+    'Mainland - trade with anyone in the UAE, most activities allow full foreign ownership, usually needs real office space.',
+    "Free zone - usually the cheapest and quickest to set up, but selling directly into the mainland typically needs a local distributor.",
+    "Offshore - for holding assets or business outside the UAE only; you can't trade inside the UAE and it doesn't come with visas.",
+    'Most first-time founders serving UAE customers start in a free zone, though it varies by emirate and activity.',
+  ].join('\n'),
+};
+
+function hintFor(stage, key) {
+  const text = QUESTION_HINTS[`${stage}:${key}`];
+  return text ? { text, kind: 'hint' } : null;
 }
 
 function buildTranscript(session) {
@@ -29,6 +52,8 @@ function buildTranscript(session) {
     for (const q of questions) {
       if (!answers[q.key]) break;
       messages.push({ id: `q-${stage}-${q.key}`, role: 'bot', text: q.prompt });
+      const hint = hintFor(stage, q.key);
+      if (hint) messages.push({ id: `hint-${stage}-${q.key}`, role: 'bot', ...hint });
       messages.push({ id: `a-${stage}-${q.key}`, role: 'user', text: answers[q.key] });
     }
   }
@@ -39,6 +64,13 @@ function messageForStatus(status) {
   if (!status) return null;
   if (status.type === 'question') return { id: `status-q-${status.key}`, role: 'bot', text: status.prompt };
   return null;
+}
+
+/** The guide for the question currently being asked. */
+function hintForStatus(status, session) {
+  if (status?.type !== 'question') return null;
+  const hint = hintFor(session?.current_stage, status.key);
+  return hint ? { id: `status-hint-${status.key}`, role: 'bot', ...hint } : null;
 }
 
 /** An explanation the bot gave in response to "I'm not sure", shown above the repeated question. */
@@ -52,9 +84,14 @@ function trailingStatusMessage(status) {
   if (status.type === 'stage1_feedback')
     return { id: 'status-feedback', role: 'bot', text: status.text, kind: 'feedback' };
   if (status.type === 'stage_complete')
-    return { id: `status-complete-${status.stage}`, role: 'bot', text: 'Section complete.', kind: 'stage_complete' };
+    return { id: `status-complete-${status.stage}`, role: 'bot', text: 'Nicely done - that section is complete.', kind: 'stage_complete' };
   if (status.type === 'ready_for_pdf')
-    return { id: 'status-ready', role: 'bot', text: "You're done! Download your PDF business plan below.", kind: 'ready_for_pdf' };
+    return {
+      id: 'status-ready',
+      role: 'bot',
+      text: "That's everything - congratulations! Your full business plan and budget are ready to download below.",
+      kind: 'ready_for_pdf',
+    };
   return null;
 }
 
@@ -163,7 +200,12 @@ export function useSession({ accessToken = null, resumeSessionId = null } = {}) 
     const transcript = buildTranscript(session);
     // An explanation comes before the question it relates to, since the question
     // is being asked again.
-    for (const msg of [noteForStatus(status), messageForStatus(status), trailingStatusMessage(status)]) {
+    for (const msg of [
+      noteForStatus(status),
+      messageForStatus(status),
+      hintForStatus(status, session),
+      trailingStatusMessage(status),
+    ]) {
       if (msg && !transcript.find((m) => m.id === msg.id)) transcript.push(msg);
     }
     return transcript;

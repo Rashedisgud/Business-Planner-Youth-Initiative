@@ -1,5 +1,6 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { computeBudget } from './budgetCalculator.js';
+import { computeProjection } from './revenueProjection.js';
 
 const PAGE_SIZE = [595.28, 841.89]; // A4
 const MARGIN = 56;
@@ -435,6 +436,73 @@ export async function generatePlanPdf(session) {
 
   d.y -= 18;
   d.paragraph(budget.disclaimer, { size: 9.5, color: MUTED });
+
+  /* ---------- Revenue projection ---------- */
+  const projection = computeProjection(stage3, budget);
+  if (projection) {
+    d.newPage();
+    d.sectionTitle('Revenue Projection');
+
+    const basis = projection.recurring
+      ? `Assumes ${projection.newPerMonth} new customers a month, each paying AED ${projection.price.toLocaleString()} every month and staying on. Revenue builds as customers accumulate.`
+      : `Assumes ${projection.newPerMonth} customers a month, each paying AED ${projection.price.toLocaleString()} once. Revenue stays flat because customers are not retained.`;
+    d.paragraph(basis, { gap: 6 });
+    d.paragraph(
+      `Monthly running costs are taken as AED ${Math.round(projection.monthlyCosts).toLocaleString()}, combining staff and day-to-day costs, marketing, and rent spread over the year.`,
+      { gap: 16 }
+    );
+
+    const px = [MARGIN, MARGIN + 250, MARGIN + 370, MARGIN + CONTENT_WIDTH];
+    d.tableRow(['Month', 'Paying customers', 'Revenue (AED)', 'Cumulative (AED)'], px, {
+      bold: true,
+      shade: SHADE,
+    });
+    projection.months.forEach((m, i) => {
+      d.tableRow(
+        [
+          `Month ${m.month}`,
+          m.payingCustomers.toLocaleString(),
+          Math.round(m.revenue).toLocaleString(),
+          Math.round(m.cumulativeRevenue).toLocaleString(),
+        ],
+        px,
+        i % 2 === 1 ? { shade: SHADE } : {}
+      );
+    });
+    d.tableRow(
+      [
+        'Year one total',
+        '',
+        '',
+        Math.round(projection.yearRevenue).toLocaleString(),
+      ],
+      px,
+      { bold: true, ruleAbove: 1.2 }
+    );
+
+    d.y -= 22;
+    d.subheading('What this suggests');
+    const net = Math.round(projection.yearNet);
+    d.bullet(
+      `Year one revenue of about AED ${Math.round(projection.yearRevenue).toLocaleString()} against running costs of about AED ${Math.round(projection.yearCosts).toLocaleString()}.`
+    );
+    d.bullet(
+      net >= 0
+        ? `That leaves roughly AED ${net.toLocaleString()} before the one-off setup costs in the previous section.`
+        : `That is short by roughly AED ${Math.abs(net).toLocaleString()}, before the one-off setup costs in the previous section. Expect to fund that gap.`
+    );
+    d.bullet(
+      projection.breakEvenMonth
+        ? `Monthly revenue overtakes monthly costs around month ${projection.breakEvenMonth}.`
+        : 'On these numbers monthly revenue does not overtake monthly costs within the first year. Raising the price, winning customers faster, or cutting running costs would each change that.'
+    );
+
+    d.y -= 8;
+    d.paragraph(
+      'This projection is arithmetic on the figures you supplied, not a forecast or a guarantee. Real results depend on demand, pricing power, and how quickly you can actually win customers. Treat it as a way to test whether your assumptions hold together.',
+      { size: 9.5, color: MUTED }
+    );
+  }
 
   /* ---------- Page numbers (skip the cover) ---------- */
   const pages = doc.getPages();

@@ -17,5 +17,9 @@
   { "stage": 3, "key": "team_size", "prompt": "Solo or team? How many visas will you need?" },
   { "stage": 3, "key": "setup_type", "prompt": "Confirm your preferred setup type (mainland/free zone/offshore)." },
   { "stage": 3, "key": "space_needs", "prompt": "Physical space needs: none, flexi-desk, office, or retail?" },
-  { "stage": 3, "key": "marketing_budget", "prompt": "What's your rough marketing budget expectation (monthly, in AED)?" }
+  { "stage": 3, "key": "marketing_budget", "prompt": "What's your rough marketing budget expectation (monthly, in AED)?" },
+  { "stage": 3, "key": "avg_sale_value", "prompt": "Now a few numbers so I can project your revenue. On average, how much will one customer pay you at a time, in AED?" },
+  { "stage": 3, "key": "revenue_repeat", "prompt": "Do customers pay you again every month (like a subscription or retainer), or is it mostly a one-off purchase?" },
+  { "stage": 3, "key": "customers_per_month", "prompt": "How many new customers do you realistically expect to win each month once you're up and running?" },
+  { "stage": 3, "key": "monthly_costs", "prompt": "Roughly what will you spend per month on staff and day-to-day running costs, in AED? Leave out rent and marketing - you've already told me those." }
 ]

@@ -50,11 +50,18 @@ export default function ChatApp({ onGoHome, auth, resumeSessionId }) {
     <div className="app-shell">
       <header className="app-header">
         <div className="brand-row">
-          <button className="brand-mark brand-mark--button" onClick={onGoHome} aria-label="Back to home">
-            <UaeFlagIcon size={18} />
+          <button className="chat-back" onClick={onGoHome}>
+            <span className="chat-back-arrow" aria-hidden="true">←</span>
+            <span className="brand-mark">
+              <UaeFlagIcon size={16} />
+            </span>
+            <span className="chat-back-label">Home</span>
           </button>
           <div className="brand-text">
-            <h1>Business Planner Youth Initiative (BPYI)</h1>
+            <h1>
+              <span className="brand-name-full">Business Planner Youth Initiative (BPYI)</span>
+              <span className="brand-name-short">BPYI</span>
+            </h1>
             <p>From idea to a bank-ready plan and budget</p>
           </div>
           <button className="about-founder-link" onClick={() => setShowFounder(true)}>

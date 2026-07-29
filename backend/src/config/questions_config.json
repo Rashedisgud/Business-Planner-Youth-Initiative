@@ -1,25 +1,19 @@
 [
-  { "stage": 1, "key": "idea", "prompt": "What's the business idea in one sentence?" },
-  { "stage": 1, "key": "target_customer", "prompt": "Who is the target customer?" },
+  { "stage": 1, "key": "idea", "prompt": "What's your business idea, in one sentence?" },
+  { "stage": 1, "key": "target_customer", "prompt": "Who is it for?" },
   { "stage": 1, "key": "problem", "prompt": "What problem does it solve for them?" },
-  { "stage": 1, "key": "competitors", "prompt": "Who are 2-3 competitors or similar existing businesses (in UAE if known)?" },
-  { "stage": 1, "key": "revenue_model", "prompt": "How will it make money?" },
+  { "stage": 1, "key": "competitors", "prompt": "Who else is already doing something similar? Two or three is plenty." },
 
-  { "stage": 2, "key": "problem_solution", "prompt": "Let's build the full plan. First: describe the problem you're solving and your solution in more detail." },
-  { "stage": 2, "key": "target_market", "prompt": "Who is your target market and customer, in more detail than before?" },
-  { "stage": 2, "key": "product", "prompt": "Describe your product or service." },
-  { "stage": 2, "key": "revenue_model", "prompt": "How exactly will you generate revenue? Describe pricing and model." },
-  { "stage": 2, "key": "marketing_plan", "prompt": "How will you acquire customers?" },
-  { "stage": 2, "key": "team", "prompt": "Who's on the team - solo, co-founders, or planned hires?" },
+  { "stage": 2, "key": "product", "prompt": "What exactly will you sell or provide?" },
+  { "stage": 2, "key": "revenue_model", "prompt": "How will you make money? Mention pricing if you have it in mind." },
+  { "stage": 2, "key": "marketing_plan", "prompt": "How will you reach your first customers?" },
+  { "stage": 2, "key": "team", "prompt": "Who's building this with you - just you, or do you have people alongside you?" },
   { "stage": 2, "key": "setup_type", "prompt": "Which UAE setup suits you best - mainland, free zone, or offshore? Here's a quick guide if these are new to you, and just ask if anything's unclear." },
 
-  { "stage": 3, "key": "industry", "prompt": "Now let's estimate your budget. What industry/business type is this?" },
-  { "stage": 3, "key": "team_size", "prompt": "Solo or team? How many visas will you need?" },
-  { "stage": 3, "key": "setup_type", "prompt": "Just to confirm for the budget - mainland, free zone, or offshore?" },
-  { "stage": 3, "key": "space_needs", "prompt": "Physical space needs: none, flexi-desk, office, or retail?" },
-  { "stage": 3, "key": "marketing_budget", "prompt": "What's your rough marketing budget expectation (monthly, in AED)?" },
-  { "stage": 3, "key": "avg_sale_value", "prompt": "Now a few numbers so I can project your revenue. On average, how much will one customer pay you at a time, in AED?" },
-  { "stage": 3, "key": "revenue_repeat", "prompt": "Do customers pay you again every month (like a subscription or retainer), or is it mostly a one-off purchase?" },
-  { "stage": 3, "key": "customers_per_month", "prompt": "How many new customers do you realistically expect to win each month once you're up and running?" },
-  { "stage": 3, "key": "monthly_costs", "prompt": "Roughly what will you spend per month on staff and day-to-day running costs, in AED? Leave out rent and marketing - you've already told me those." }
+  { "stage": 3, "key": "space_needs", "prompt": "What space do you need - none, a flexi-desk, an office, or retail?" },
+  { "stage": 3, "key": "marketing_budget", "prompt": "Roughly what will you spend on marketing each month, in AED?" },
+  { "stage": 3, "key": "avg_sale_value", "prompt": "On average, how much will one customer pay you at a time, in AED?" },
+  { "stage": 3, "key": "revenue_repeat", "prompt": "Do they pay again every month, or is it mostly a one-off?" },
+  { "stage": 3, "key": "customers_per_month", "prompt": "How many new customers a month do you realistically expect?" },
+  { "stage": 3, "key": "monthly_costs", "prompt": "Last one - what will you spend monthly on staff and day-to-day running costs, in AED? Leave out rent and marketing, you've covered those." }
 ]

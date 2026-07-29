@@ -7,7 +7,7 @@ const STORAGE_KEY = 'byi_session_id';
 const STAGE_INTROS = {
   1: "Hi, welcome! I'll help you sanity-check your business idea, then build a full plan and budget together. There are no wrong answers here - just tell me what you're thinking. Let's start with the idea itself.",
   2: "Nice work - that's the hardest part done. Now let's build out the full business plan. I'll take it one section at a time, and short answers are completely fine.",
-  3: "Almost there! Last step is a rough budget for setting up in the UAE. Don't worry about being precise - your best guess is genuinely enough.",
+  3: "Almost there. Last few are numbers, for your setup budget and a revenue projection. Don't worry about being precise - your best guess is genuinely enough.",
 };
 
 function questionsForStage(stage) {

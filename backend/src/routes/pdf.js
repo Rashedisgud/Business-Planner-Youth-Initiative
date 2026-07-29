@@ -19,7 +19,11 @@ pdfRouter.get('/:id/pdf', async (req, res, next) => {
     // budget and revenue assumptions into account. generateProsAndCons swallows
     // its own failures and returns null, so a model outage costs the section
     // rather than the document.
-    const budget = computeBudget(session.stage3_answers || {});
+    // Setup type and team live in stage 2 now, so the budget needs both stages.
+    const budget = computeBudget({
+      ...(session.stage2_answers || {}),
+      ...(session.stage3_answers || {}),
+    });
     const projection = computeProjection(session.stage3_answers || {}, budget);
     const analysis = await generateProsAndCons({
       stage1: session.stage1_answers || {},

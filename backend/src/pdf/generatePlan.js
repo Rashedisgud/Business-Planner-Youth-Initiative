@@ -27,15 +27,21 @@ const SUMMARY_FIELDS = [
   ['revenue_model', 'How it makes money'],
 ];
 
-const SECTION_LABELS = {
-  problem_solution: 'Problem & Solution',
-  target_market: 'Target Market & Customer',
-  product: 'Product / Service Description',
-  revenue_model: 'Revenue Model',
-  marketing_plan: 'Marketing & Customer Acquisition Plan',
-  team: 'Team',
-  setup_type: 'UAE Setup Preference',
-};
+/**
+ * The plan's sections and where each is answered. Stage 2 used to re-ask the
+ * problem and the customer that stage 1 had already covered; those duplicates
+ * were removed, so those two sections read from stage 1 instead. The stage 2
+ * keys are still checked first so plans created before that still render fully.
+ */
+const PLAN_SECTIONS = [
+  { label: 'Problem & Solution', keys: [['stage2', 'problem_solution'], ['stage1', 'problem']] },
+  { label: 'Target Market & Customer', keys: [['stage2', 'target_market'], ['stage1', 'target_customer']] },
+  { label: 'Product / Service Description', keys: [['stage2', 'product']] },
+  { label: 'Revenue Model', keys: [['stage2', 'revenue_model'], ['stage1', 'revenue_model']] },
+  { label: 'Marketing & Customer Acquisition Plan', keys: [['stage2', 'marketing_plan']] },
+  { label: 'Team', keys: [['stage2', 'team'], ['stage3', 'team_size']] },
+  { label: 'UAE Setup Preference', keys: [['stage2', 'setup_type'], ['stage3', 'setup_type']] },
+];
 
 // The standard PDF fonts encode WinAnsi only - Latin-1 plus these typographic
 // extras. Drawing anything else throws, which previously killed the whole
@@ -432,22 +438,33 @@ export async function generatePlanPdf(session, { analysis = null } = {}) {
   }
 
   /* ---------- The plan ---------- */
-  const planSections = Object.entries(SECTION_LABELS).filter(([key]) => stage2[key]);
+  const byStage = { stage1, stage2, stage3 };
+  const planSections = PLAN_SECTIONS.map(({ label, keys }) => {
+    for (const [stage, key] of keys) {
+      const value = byStage[stage]?.[key];
+      if (value) return { label, value };
+    }
+    return null;
+  }).filter(Boolean);
+
   if (planSections.length) {
     d.newPage();
     d.sectionTitle('The Plan');
-    planSections.forEach(([key, label], i) => {
+    planSections.forEach(({ label, value }, i) => {
       d.subheading(`${i + 1}. ${label}`);
-      d.paragraph(stage2[key], { gap: 14 });
+      d.paragraph(value, { gap: 14 });
     });
   }
 
   /* ---------- Budget ---------- */
-  const budget = computeBudget(stage3);
+  const budget = computeBudget({ ...stage2, ...stage3 });
   d.newPage();
   d.sectionTitle('Budget Estimate');
 
-  const visaText = `${budget.visaCount} ${budget.visaCount === 1 ? 'visa' : 'visas'}`;
+  const visaText =
+    budget.visaCount === 0
+      ? 'no staff visas to sponsor'
+      : `${budget.visaCount} staff ${budget.visaCount === 1 ? 'visa' : 'visas'}`;
   const spaceText =
     budget.spaceNeeds === 'none' ? 'no physical space' : `${budget.spaceNeeds} space`;
   d.paragraph(

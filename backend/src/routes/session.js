@@ -12,6 +12,9 @@ import { validateAnswer } from '../llm/validateAnswer.js';
 
 export const sessionRouter = Router();
 
+const FEEDBACK_UNAVAILABLE =
+  "Your answers are saved, but the automatic feedback couldn't be generated just now. That doesn't affect your plan - continue to the business plan builder and everything you've entered will still be used.";
+
 function statusFor(session) {
   const { current_stage, current_question_index } = session;
   if (!isStageComplete(current_stage, current_question_index)) {
@@ -91,7 +94,15 @@ sessionRouter.post('/:id/answer', answerLimiter, async (req, res, next) => {
     const patch = { [answersKey]: updatedAnswers, current_question_index: newIndex };
 
     if (current_stage === 1 && isStageComplete(1, newIndex)) {
-      patch.stage1_feedback = await generateStage1Feedback(updatedAnswers);
+      // Generating the feedback must never cost someone their answer. If the
+      // model call fails we still save their progress and let them move on to
+      // the plan builder, rather than stranding them on the last question.
+      try {
+        patch.stage1_feedback = await generateStage1Feedback(updatedAnswers);
+      } catch (err) {
+        console.error('Stage 1 feedback generation failed, saving answers anyway:', err.message);
+        patch.stage1_feedback = FEEDBACK_UNAVAILABLE;
+      }
     }
 
     const updated = await updateSession(req.params.id, patch);

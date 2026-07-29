@@ -300,6 +300,10 @@ body {
 /* Reference notes shown beside a question. Deliberately quieter than a normal
    bot message so it reads as a glossary rather than something asking for a
    reply. */
+.founder-section-card--second {
+  margin-top: 18px;
+}
+
 .auth-forgot {
   align-self: flex-start;
   font-size: 12.5px;

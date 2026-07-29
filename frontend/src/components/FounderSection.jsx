@@ -5,9 +5,16 @@ export default function FounderSection() {
     <section id="founder" className="section founder-section">
       <div className="section-inner section-inner--narrow">
         <span className="section-eyebrow">About</span>
-        <h2 className="section-title">Meet the founder</h2>
+        <h2 className="section-title">Meet the team</h2>
         <div className="founder-section-card">
-          <FounderPanel />
+          <FounderPanel person={1} heading="Meet the founder" />
+        </div>
+        <div className="founder-section-card founder-section-card--second">
+          <FounderPanel
+            person={2}
+            heading="Meet the co-founder"
+            emptyLabel="The co-founder section hasn't been filled in yet."
+          />
         </div>
       </div>
     </section>

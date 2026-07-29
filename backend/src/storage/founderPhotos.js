@@ -19,9 +19,11 @@ export async function ensureFounderBucket() {
   }
 }
 
-export async function uploadFounderPhoto(buffer, mimeType) {
+export async function uploadFounderPhoto(buffer, mimeType, personId = 1) {
   const ext = mimeType.split('/')[1]?.replace('jpeg', 'jpg') || 'jpg';
-  const path = `founder.${ext}`;
+  // Person 1 keeps the original filename so photos uploaded before the
+  // co-founder existed are not orphaned.
+  const path = personId === 1 ? `founder.${ext}` : `founder-${personId}.${ext}`;
 
   const { error } = await supabase.storage.from(BUCKET).upload(path, buffer, {
     contentType: mimeType,

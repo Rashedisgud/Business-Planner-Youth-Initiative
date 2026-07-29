@@ -19,9 +19,10 @@ create table if not exists sessions (
 -- in case a future anon/browser key ever gets pointed at this table.
 alter table sessions enable row level security;
 
--- Singleton table for the "About the founder" section. The check constraint
--- guarantees there is ever only one row (id = 1), so the backend can always
--- read/update it without worrying about which row to target.
+-- The people shown in the "About the founder" section. Two fixed rows rather
+-- than a free-form list: id 1 is the founder, id 2 the co-founder. Keeping the
+-- ids fixed means the backend always knows which row it is addressing, and the
+-- page always renders the two in the same order.
 create table if not exists founder (
   id integer primary key default 1,
   name text,
@@ -31,7 +32,22 @@ create table if not exists founder (
   constraint founder_singleton check (id = 1)
 );
 
+-- Originally this table held one row and the constraint enforced it. Widening
+-- it in place so existing projects pick up the co-founder without losing the
+-- founder they already filled in.
+alter table founder drop constraint if exists founder_singleton;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'founder_people'
+  ) then
+    alter table founder add constraint founder_people check (id in (1, 2));
+  end if;
+end $$;
+
 insert into founder (id) values (1) on conflict (id) do nothing;
+insert into founder (id) values (2) on conflict (id) do nothing;
 
 alter table founder enable row level security;
 

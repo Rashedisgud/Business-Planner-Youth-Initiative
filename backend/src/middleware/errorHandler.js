@@ -30,5 +30,15 @@ export function errorHandler(err, req, res, next) { // eslint-disable-line no-un
     });
   }
 
+  // 23514 is a check-constraint violation. The only one here is the founder
+  // table still limited to a single row, which means the co-founder migration
+  // hasn't been run on this database yet.
+  if (err.code === '23514' && /founder/i.test(err.message ?? '')) {
+    return res.status(503).json({
+      error:
+        "This database still has the older single-person founder table. Re-run supabase/schema.sql in the Supabase SQL editor to add the co-founder, then try again.",
+    });
+  }
+
   res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
 }

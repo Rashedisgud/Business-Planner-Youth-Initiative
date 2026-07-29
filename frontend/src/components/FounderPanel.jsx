@@ -19,7 +19,12 @@ function PersonIcon() {
   );
 }
 
-export default function FounderPanel({ editable = false }) {
+export default function FounderPanel({
+  editable = false,
+  person = 1,
+  heading = 'Meet the founder',
+  emptyLabel = "This section hasn't been filled in yet.",
+}) {
   const { password, isUnlocked, verify, forget } = useAdminAuth();
 
   const [founder, setFounder] = useState(null);
@@ -39,11 +44,14 @@ export default function FounderPanel({ editable = false }) {
     let cancelled = false;
     async function load() {
       try {
-        const { founder } = await api.getFounder();
+        const data = await api.getFounder();
         if (cancelled) return;
-        setFounder(founder);
-        setName(founder?.name || '');
-        setBio(founder?.bio || '');
+        // `people` arrives from the current backend; fall back to `founder` so a
+        // browser that loads this before the backend redeploys still renders.
+        const mine = data.people?.find((p) => p.id === person) ?? (person === 1 ? data.founder : null);
+        setFounder(mine);
+        setName(mine?.name || '');
+        setBio(mine?.bio || '');
       } catch (err) {
         if (!cancelled) setLoadError(err.message);
       } finally {
@@ -54,7 +62,7 @@ export default function FounderPanel({ editable = false }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [person]);
 
   function startEdit() {
     setMode(isUnlocked ? 'edit' : 'password');
@@ -82,10 +90,10 @@ export default function FounderPanel({ editable = false }) {
     setSaving(true);
     setSaveError(null);
     try {
-      const { founder: updated } = await api.updateFounder({ name, bio }, password);
+      const { founder: updated } = await api.updateFounder({ name, bio }, password, person);
       let latest = updated;
       if (photoFile) {
-        const { founder: withPhoto } = await api.uploadFounderPhoto(photoFile, password);
+        const { founder: withPhoto } = await api.uploadFounderPhoto(photoFile, password, person);
         latest = withPhoto;
       }
       setFounder(latest);
@@ -158,8 +166,8 @@ export default function FounderPanel({ editable = false }) {
         {displayPhoto ? <img src={displayPhoto} alt={founder?.name || 'Founder'} /> : <PersonIcon />}
       </div>
       <div className="founder-text">
-        <h3>{founder?.name || 'Meet the founder'}</h3>
-        <p className="founder-bio">{founder?.bio || "This section hasn't been filled in yet."}</p>
+        <h3>{founder?.name || heading}</h3>
+        <p className="founder-bio">{founder?.bio || emptyLabel}</p>
 
         {editable && mode === 'view' && (
           <button className="btn-secondary btn-edit" onClick={startEdit}>

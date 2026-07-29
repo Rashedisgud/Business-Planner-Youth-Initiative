@@ -16,10 +16,10 @@ async function request(path, options = {}) {
   return data;
 }
 
-async function uploadFounderPhoto(file, password) {
+async function uploadFounderPhoto(file, password, person = 1) {
   const form = new FormData();
   form.append('photo', file);
-  const res = await fetch(`${API_URL}/api/founder/photo`, {
+  const res = await fetch(`${API_URL}/api/founder/photo?person=${person}`, {
     method: 'POST',
     headers: { 'x-admin-password': password },
     body: form,
@@ -63,8 +63,8 @@ export const api = {
   getFounder: () => request('/api/founder'),
   verifyAdminPassword: (password) =>
     request('/api/founder/verify', { method: 'POST', headers: { 'x-admin-password': password } }),
-  updateFounder: (patch, password) =>
-    request('/api/founder', {
+  updateFounder: (patch, password, person = 1) =>
+    request(`/api/founder?person=${person}`, {
       method: 'PUT',
       headers: { 'x-admin-password': password },
       body: JSON.stringify(patch),

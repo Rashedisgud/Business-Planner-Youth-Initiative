@@ -1,148 +1,112 @@
-# Project Spec: UAE Business Planning Chatbot
+# Business Planner Youth Initiative (BPYI)
 
-## 1. Overview
+Live at **https://bypi.org**
 
-A conversational AI tool that helps aspiring UAE-based founders go from raw idea to a structured business plan and startup budget. The bot walks users through three stages via chat, then generates a downloadable PDF business plan + budget breakdown.
+A guided chatbot that takes an aspiring UAE founder from a raw idea to a structured business plan, a setup budget, and a twelve month revenue projection — delivered as a downloadable PDF.
 
-**Target user:** First-time UAE founders/freelancers who need a business plan for a bank, free zone application, or their own clarity, but can't afford a consultant.
+**Who it's for:** first-time UAE founders and freelancers who need a business plan for a bank, a free zone application, or their own clarity, and can't afford a consultant.
 
-**Core value:** Structured, guided output (not a blank template, not a one-shot AI essay).
+**What makes it different:** the questions are fixed and the document is assembled from structured answers. It isn't a blank template, and it isn't a one-shot AI essay.
 
----
-
-## 2. Core User Flow
-
-The chatbot moves the user through three sequential stages. Progress should be saved so users can leave and resume.
-
-### Stage 1 — Idea Validation (free)
-Bot asks a fixed set of questions:
-- What's the business idea in one sentence?
-- Who is the target customer?
-- What problem does it solve for them?
-- Who are 2-3 competitors or similar existing businesses (in UAE if known)?
-- How will it make money?
-
-Bot responds with structured feedback:
-- A short sanity check on market size/demand
-- Notes on how it compares to existing competitors
-- 2-3 clarifying questions or red flags to think about
-
-This stage is meant to be free and low-friction — it's the hook.
-
-### Stage 2 — Business Plan Builder (paid)
-Bot asks guided questions section by section, one section at a time:
-1. Problem & Solution
-2. Target Market & Customer
-3. Product/Service Description
-4. Revenue Model
-5. Marketing/Customer Acquisition Plan
-6. Team (solo/co-founders/hires)
-7. UAE Setup Preference (mainland vs free zone vs offshore — ask if they know, otherwise explain the difference briefly and let them choose)
-
-Each section's answers get stored as structured data (not raw chat text) so they can be reliably inserted into a PDF template later.
-
-### Stage 3 — Budget Estimator (paid)
-Bot asks:
-- Business type/industry
-- Solo or team, how many visas needed
-- Preferred setup type (from Stage 2, or ask again)
-- Physical space needs (none / flexi-desk / office / retail)
-- Marketing budget expectations
-
-Bot outputs a budget breakdown table using pre-compiled rough UAE benchmark ranges (trade license, visa costs, flexi-desk/office, basic marketing) — **presented as rough estimates with a clear disclaimer, not guaranteed figures.**
+**It is free.** No payment, no card, no limits. An account is optional and only exists to save plans across devices.
 
 ---
 
-## 3. Output
+## 1. How it works
 
-At the end of Stage 2 + 3, generate a downloadable PDF containing:
-- Cover page (business name, date)
-- Business plan sections (from Stage 2 structured answers)
-- Budget breakdown table (from Stage 3)
-- Disclaimer footer noting figures are estimates and user should confirm with official sources (free zone authority, DED, etc.)
+Three stages, 21 questions, one at a time. Progress is saved, so someone can leave and come back.
 
-PDF should be generated from a **template**, populating structured fields — not by asking the LLM to freestyle the whole document. This keeps output consistent and professional-looking.
+### Stage 1 — Idea validation (5 questions)
 
----
+The idea in a sentence, the target customer, the problem, competitors, and how it makes money.
 
-## 4. Monetization
+The model then gives a short read: whether demand is plausible, how it compares to the competitors *they named*, and two or three questions worth thinking about. It's told not to invent facts about companies it doesn't recognise.
 
-- Stage 1 (idea validation): free, unlimited
-- Stage 2 + 3 + PDF export: paid — either a one-time fee per generated plan, or a subscription if the user wants to revise/regenerate
-- Payment can be added after MVP validation — for v1, this can just gate the "Generate PDF" button behind a simple paywall (Stripe Checkout is easiest to bolt on)
+### Stage 2 — The plan (7 questions)
 
----
+Problem and solution, target market, product, revenue model, marketing, team, and UAE setup type.
 
-## 5. Tech Stack (recommended for cheap/free-tier build)
+The setup question shows a plain-language guide to mainland, free zone and offshore alongside it, so nobody has to know the terms in advance or ask what they mean.
 
-- **Frontend:** React (chat UI) — simple message list + input, one active question shown at a time
-- **Backend:** Node.js/Express or Python/FastAPI
-- **LLM:** Claude or GPT API — used for (a) Stage 1 feedback generation, (b) light validation/rephrasing of user answers in Stage 2, NOT for freeform generation of the whole plan
-- **State management:** track which stage/question index the user is on per session
-- **Database:** Supabase (free tier) — store user sessions, structured answers per stage
-- **PDF generation:** a PDF library (e.g., pdf-lib or a headless template renderer) filling a pre-built template with the structured answers
-- **Payments (post-MVP):** Stripe Checkout gating the PDF export step
-- **Hosting:** Vercel (frontend) + Railway/Render (backend) free/low tiers
+Answers are lightly tidied by the model — grammar and filler only, never adding information — and stored as structured fields rather than raw chat.
+
+### Stage 3 — Budget and projection (9 questions)
+
+Industry, team size and visas, setup type, space needs, and marketing budget feed the budget table.
+
+Four further questions — price per customer, whether payment repeats, new customers per month, and monthly running costs — drive the revenue projection.
 
 ---
 
-## 6. Data Model (rough shape)
+## 2. What the PDF contains
+
+| Section | Built from |
+|---|---|
+| Cover | The one-line idea |
+| Summary | The five stage 1 answers |
+| Initial Assessment | The model's read of the idea |
+| The Plan | The seven stage 2 sections |
+| Budget Estimate | Licence, visas, space, marketing |
+| Revenue Projection | Twelve months from their own figures |
+| Strengths & Risks | The model's read of everything above, including the numbers |
+
+The projection is arithmetic on what the founder supplied, never an estimate made on their behalf. If the numeric answers can't be read as numbers, the section is left out — an invented forecast in a document someone shows a bank is worse than no forecast.
+
+---
+
+## 3. Tech
+
+- **Frontend:** React + Vite, deployed on Vercel
+- **Backend:** Node.js + Express, deployed on Render
+- **Database and auth:** Supabase — sessions, founder profile, reviews, and optional accounts
+- **Model:** OpenAI `gpt-4o-mini`, used only for stage 1 feedback, light answer tidying, and the strengths and risks read. The plan itself is assembled from structured data, not generated.
+- **PDF:** `pdf-lib`, laid out in code from those structured fields
+
+Setup instructions, environment variables and deployment steps are in [SETUP.md](SETUP.md).
+
+---
+
+## 4. Data model
 
 ```
 Session {
   id
+  user_id                 -- null for anonymous plans
   current_stage: 1 | 2 | 3
   current_question_index
   stage1_answers: { idea, target_customer, problem, competitors, revenue_model }
-  stage2_answers: { problem_solution, target_market, product, revenue_model, marketing_plan, team, setup_type }
-  stage3_answers: { industry, team_size, visas_needed, setup_type, space_needs, marketing_budget }
-  paid: boolean
+  stage2_answers: { problem_solution, target_market, product, revenue_model,
+                    marketing_plan, team, setup_type }
+  stage3_answers: { industry, team_size, setup_type, space_needs, marketing_budget,
+                    avg_sale_value, revenue_repeat, customers_per_month, monthly_costs }
+  stage1_feedback
   created_at
 }
 ```
 
-Config for the question flow (so questions can be edited without touching code):
-
-```
-questions_config.json
-[
-  { stage: 1, key: "idea", prompt: "What's the business idea in one sentence?" },
-  { stage: 1, key: "target_customer", prompt: "Who is the target customer?" },
-  ...
-]
-```
+The question flow lives in `questions_config.json`, duplicated in `backend/src/config/` and `frontend/src/config/` — the backend drives the flow, the frontend renders the transcript. **The two files must stay identical.**
 
 ---
 
-## 7. What to explicitly SKIP for v1
+## 5. Deliberately not built
 
-- Live UAE regulation/pricing lookups (rules change, risky to claim real-time accuracy)
-- Multi-language support (English only for v1)
-- Investor/free zone matching or referral integrations
-- User accounts/login system (a session link or simple email capture is enough for v1)
-- Editing previously answered questions mid-flow (just let them restart a stage if needed)
-
----
-
-## 8. Build Order (suggested for Claude Code)
-
-1. Scaffold chat UI with a hardcoded question flow (Stage 1 only), no backend yet
-2. Add backend + LLM call for Stage 1 feedback generation
-3. Add session storage (Supabase) so progress persists
-4. Add Stage 2 flow with structured answer storage
-5. Build PDF template + generation from structured Stage 2 data
-6. Add Stage 3 flow + budget table generation into the same PDF
-7. Add Stripe paywall gating PDF export
-8. Polish UI, add disclaimers, deploy
+- Live UAE regulation or pricing lookups. Rules change; claiming real-time accuracy would be risky and the figures are labelled as estimates for that reason.
+- Languages other than English. Non-Latin text is accepted and stored correctly, but the PDF fonts can't render it, so those fields are flagged in the document rather than silently dropped. Proper Arabic output needs an embedded font and right-to-left shaping.
+- Investor or free zone matching and referrals.
+- Editing an earlier answer mid-flow. Starting a new plan is the way back.
 
 ---
 
-## 9. Prompt for the initial Claude Code session
+## 6. Changes from the original spec
 
-> "Build a multi-stage conversational chatbot web app. It has 3 stages: idea validation, business plan builder, and budget estimator — each stage asks the user a fixed sequence of questions one at a time (loaded from a config file) and stores structured answers per session. After stages 2 and 3 are complete, generate a downloadable PDF business plan document populated from the structured answers using a template (not freeform LLM generation). Use [React frontend / Node+Express backend / Supabase for storage] and an LLM API call only for generating feedback text in stage 1 and light answer validation. Scaffold the project structure, the question config format, session state handling, and the PDF generation step first."
+This began as a paid product: stage 1 free as a hook, stages 2 and 3 behind a Stripe paywall. That was built and then removed — it is free throughout, and there is no payment code left in the repository.
+
+Accounts were originally listed as out of scope. They exist, but only to save and resume plans; nothing is gated behind them.
+
+Two unused objects from the paid version may still exist in an older database — a `sessions.paid` column and an empty `profiles` table. [`supabase/cleanup_legacy.sql`](supabase/cleanup_legacy.sql) removes them, and is safe to skip.
 
 ---
 
-## 10. Legal/Content Note
+## 7. Legal and content note
 
-Any UAE-specific cost figures, license types, or regulatory info shown to users should be labeled clearly as **rough estimates for planning purposes only**, with a recommendation to confirm with the relevant free zone authority or DED before acting. This avoids the tool being mistaken for official guidance.
+Every UAE cost figure, licence type and regulatory statement shown to a user is labelled as a **rough estimate for planning purposes only**, with a recommendation to confirm with the relevant free zone authority or the Dubai Department of Economy and Tourism before acting. Nothing here is official guidance, and the tool should never be presented as such.

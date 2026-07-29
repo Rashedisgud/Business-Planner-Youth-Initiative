@@ -22,6 +22,7 @@ function PersonIcon() {
 export default function FounderPanel({
   editable = false,
   person = 1,
+  role = 'Founder',
   heading = 'Meet the founder',
   emptyLabel = "This section hasn't been filled in yet.",
 }) {
@@ -166,6 +167,10 @@ export default function FounderPanel({
         {displayPhoto ? <img src={displayPhoto} alt={founder?.name || 'Founder'} /> : <PersonIcon />}
       </div>
       <div className="founder-text">
+        {/* Always shown, not just as a fallback for a missing name - otherwise
+            two filled-in cards are just two names and nobody can tell which
+            person is which. */}
+        <p className="founder-role">{role}</p>
         <h3>{founder?.name || heading}</h3>
         <p className="founder-bio">{founder?.bio || emptyLabel}</p>
 

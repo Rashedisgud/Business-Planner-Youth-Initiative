@@ -39,15 +39,10 @@ export function useAuth() {
     await supabase.auth.signOut();
   }, []);
 
-  /** Changes the password of whoever is currently signed in. */
-  const changePassword = useCallback(async (password) => {
-    const { error } = await supabase.auth.updateUser({ password });
-    if (error) throw error;
-  }, []);
-
   /**
-   * For someone locked out entirely. Supabase mails a link that signs them in,
-   * and the recovery event below drops them straight into changing it.
+   * Password changes are handled entirely by email: Supabase sends a link that
+   * signs the person in and lets them set a new one on its own page. Keeps the
+   * nav clear and means there is one route to it rather than two.
    */
   const requestPasswordReset = useCallback(async (email) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -63,7 +58,6 @@ export function useAuth() {
     signUp,
     signIn,
     signOut,
-    changePassword,
     requestPasswordReset,
   };
 }

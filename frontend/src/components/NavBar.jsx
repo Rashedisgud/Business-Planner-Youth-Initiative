@@ -2,13 +2,11 @@ import { useState, Fragment } from 'react';
 import UaeFlagIcon from './UaeFlagIcon.jsx';
 import AuthModal from './AuthModal.jsx';
 import MyPlansModal from './MyPlansModal.jsx';
-import PasswordModal from './PasswordModal.jsx';
 
 export default function NavBar({ onStart, auth, onResumeSession }) {
   const [showAuth, setShowAuth] = useState(false);
   const [showPlans, setShowPlans] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const { user, accessToken, signIn, signUp, signOut, changePassword, requestPasswordReset } = auth;
+  const { user, accessToken, signIn, signUp, signOut, requestPasswordReset } = auth;
 
   return (
     <Fragment>
@@ -29,9 +27,6 @@ export default function NavBar({ onStart, auth, onResumeSession }) {
             <div className="nav-account">
               <button className="link-button" onClick={() => setShowPlans(true)}>
                 My plans
-              </button>
-              <button className="link-button nav-password" onClick={() => setShowPassword(true)}>
-                Password
               </button>
               <button className="link-button" onClick={signOut}>
                 Sign out
@@ -59,14 +54,6 @@ export default function NavBar({ onStart, auth, onResumeSession }) {
           onSignIn={signIn}
           onSignUp={signUp}
           onRequestPasswordReset={requestPasswordReset}
-        />
-      )}
-
-      {showPassword && (
-        <PasswordModal
-          email={user?.email}
-          onClose={() => setShowPassword(false)}
-          onChangePassword={changePassword}
         />
       )}
 

@@ -40,12 +40,13 @@ export default function AdminPage({ onGoHome }) {
               <span className="section-eyebrow">Admin</span>
               <h2 className="section-title">Team section</h2>
               <div className="founder-section-card">
-                <FounderPanel editable person={1} heading="Meet the founder" />
+                <FounderPanel editable person={1} role="Founder" heading="Meet the founder" />
               </div>
               <div className="founder-section-card founder-section-card--second">
                 <FounderPanel
                   editable
                   person={2}
+                  role="Co-founder"
                   heading="Meet the co-founder"
                   emptyLabel="Not filled in yet - add the co-founder's details here, or leave blank to hide."
                 />

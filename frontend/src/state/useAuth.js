@@ -18,9 +18,16 @@ export function useAuth() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
+  /**
+   * Supabase returns a session straight away when email confirmation is turned
+   * off, and no session when it is on. Report which happened so the caller can
+   * either close up or tell the person to go and check their inbox, rather than
+   * hardcoding an assumption about how the project is configured.
+   */
   const signUp = useCallback(async (email, password) => {
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) throw error;
+    return { needsConfirmation: !data.session };
   }, []);
 
   const signIn = useCallback(async (email, password) => {

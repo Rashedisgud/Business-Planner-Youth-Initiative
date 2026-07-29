@@ -15,9 +15,14 @@ export default function AuthModal({ onClose, onSignIn, onSignUp }) {
     setInfo(null);
     try {
       if (mode === 'signup') {
-        await onSignUp(email, password);
-        setInfo('Account created. Check your email to confirm, then sign in.');
-        setMode('signin');
+        const { needsConfirmation } = await onSignUp(email, password);
+        if (needsConfirmation) {
+          setInfo('Account created. Check your email to confirm, then sign in.');
+          setMode('signin');
+        } else {
+          // Already signed in - nothing to confirm.
+          onClose();
+        }
       } else {
         await onSignIn(email, password);
         onClose();

@@ -22,7 +22,7 @@ You need two free accounts:
    - In Project Settings → API, copy the **Project URL** and the **service_role** key (not the anon key — the backend needs full access) for `backend/.env`.
    - Also copy the **anon / publishable** key (a different key, safe to expose in frontend code) for `frontend/.env`.
    - Nothing else to do here — the backend automatically creates its own `founder-photos` storage bucket the first time it starts up.
-   - Sign-up emails: by default Supabase requires users to click a confirmation link before they can sign in. That's fine as-is for testing (or for real use with a configured email provider) — no setup needed unless you want to turn it off, which you can do in Authentication → Providers → Email.
+   - Sign-up emails: Supabase requires a confirmation link by default. This project deliberately turns that **off** (Authentication → Providers → Email → uncheck "Confirm email"), so signing up is instant. Accounts here only save and resume plans — they hold nothing sensitive and there are no payments — so the confirmation step cost more users than it protected. The sign-up code handles either setting, so switching it back on later needs no code change.
 
 ## 3. Configure environment variables
 

@@ -38,6 +38,11 @@ export async function updateSession(id, patch) {
   return data;
 }
 
+export async function deleteSession(id) {
+  const { error } = await supabase.from(TABLE).delete().eq('id', id);
+  if (error) throw error;
+}
+
 export async function listSessionsForUser(userId) {
   const { data, error } = await supabase
     .from(TABLE)

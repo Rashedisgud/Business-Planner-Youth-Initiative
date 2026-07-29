@@ -750,10 +750,36 @@ button.nav-brand {
   border-radius: 12px;
 }
 
+.my-plan-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.my-plan-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.my-plan-confirm {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.link-button--danger {
+  color: #c0392b;
+}
+
+.link-button--danger:hover {
+  color: #96281b;
+}
+
 .my-plan-title {
   font-size: 14px;
   font-weight: 700;
   margin: 0 0 3px;
+  overflow-wrap: anywhere;
 }
 
 .my-plan-meta {

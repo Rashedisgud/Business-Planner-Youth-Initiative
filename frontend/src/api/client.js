@@ -56,6 +56,8 @@ export const api = {
   advanceStage: (id, token) =>
     request(`/api/sessions/${id}/advance`, { method: 'POST', headers: authHeaders(token) }),
   listMySessions: (token) => request('/api/sessions/mine', { headers: authHeaders(token) }),
+  deleteSession: (id, token) =>
+    request(`/api/sessions/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
   downloadPdf,
 
   getFounder: () => request('/api/founder'),

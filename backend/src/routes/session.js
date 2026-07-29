@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { createSession, getSession, updateSession, listSessionsForUser } from '../db/sessions.js';
+import {
+  createSession,
+  getSession,
+  updateSession,
+  deleteSession,
+  listSessionsForUser,
+} from '../db/sessions.js';
 import { requireAuth } from '../middleware/optionalAuth.js';
 import { sessionCreateLimiter, answerLimiter } from '../middleware/rateLimiters.js';
 import {
@@ -52,6 +58,25 @@ sessionRouter.get('/mine', requireAuth, async (req, res, next) => {
   try {
     const sessions = await listSessionsForUser(req.user.id);
     res.json({ sessions });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Deleting is permanent, so it is restricted to plans the caller actually owns.
+ * Anonymous plans have no owner and deliberately cannot be deleted this way -
+ * there would be no way to prove the request came from whoever made them.
+ */
+sessionRouter.delete('/:id', requireAuth, async (req, res, next) => {
+  try {
+    const session = await getSession(req.params.id);
+    if (!session) return res.status(404).json({ error: 'Plan not found' });
+    if (session.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'This plan belongs to a different account.' });
+    }
+    await deleteSession(req.params.id);
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }

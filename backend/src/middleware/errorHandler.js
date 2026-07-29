@@ -21,5 +21,14 @@ export function errorHandler(err, req, res, next) { // eslint-disable-line no-un
     });
   }
 
+  // PGRST116 is "expected one row, got none". Callers should be using
+  // maybeSingle and returning a 404 themselves; this is a backstop so the raw
+  // "Cannot coerce the result to a single JSON object" can never reach anyone.
+  if (err.code === 'PGRST116') {
+    return res.status(404).json({
+      error: "That plan no longer exists. Start a new one and you'll be on your way.",
+    });
+  }
+
   res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
 }

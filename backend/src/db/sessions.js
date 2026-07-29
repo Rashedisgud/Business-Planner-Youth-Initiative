@@ -17,23 +17,29 @@ export async function createSession({ userId = null } = {}) {
   return data;
 }
 
+/**
+ * Returns null when the plan isn't there, rather than throwing. A stored id can
+ * outlive the row it points at - a plan deleted on another device, or an old id
+ * left in a browser - and that should read as "not found", not as a crash.
+ */
 export async function getSession(id) {
   const { data, error } = await supabase
     .from(TABLE)
     .select('*')
     .eq('id', id)
-    .single();
+    .maybeSingle();
   if (error) throw error;
   return data;
 }
 
+/** Null when the row vanished between reading it and writing to it. */
 export async function updateSession(id, patch) {
   const { data, error } = await supabase
     .from(TABLE)
     .update(patch)
     .eq('id', id)
     .select()
-    .single();
+    .maybeSingle();
   if (error) throw error;
   return data;
 }

@@ -114,9 +114,15 @@ export function useSession({ accessToken = null, resumeSessionId = null } = {}) 
       setError(null);
       try {
         if (resumeSessionId) {
-          const result = await api.getSession(resumeSessionId, accessToken);
-          applyResult(result);
-          return;
+          try {
+            const result = await api.getSession(resumeSessionId, accessToken);
+            applyResult(result);
+            return;
+          } catch {
+            // The plan was deleted, possibly on another device. Fall through and
+            // start a fresh one instead of stranding them on an error.
+            localStorage.removeItem(STORAGE_KEY);
+          }
         }
 
         const params = new URLSearchParams(window.location.search);
@@ -136,7 +142,8 @@ export function useSession({ accessToken = null, resumeSessionId = null } = {}) 
             // That plan is already finished - fall through to starting a fresh one
             // instead of reopening the completed plan every time.
           } catch {
-            // fall through to creating a new session
+            // Stored id points at a plan that's gone - drop it and start fresh.
+            localStorage.removeItem(STORAGE_KEY);
           }
         }
         const created = await api.createSession(accessToken);
@@ -160,7 +167,16 @@ export function useSession({ accessToken = null, resumeSessionId = null } = {}) 
         const result = await api.submitAnswer(session.id, value, accessToken);
         applyResult(result);
       } catch (err) {
-        setError(err.message);
+        // If the plan vanished under us mid-conversation, quietly start a new
+        // one rather than leaving them stuck on a dead session.
+        if (/no longer exists|not found/i.test(err.message)) {
+          localStorage.removeItem(STORAGE_KEY);
+          const created = await api.createSession(accessToken);
+          applyResult(created);
+          setError("That plan was no longer available, so I've started a fresh one for you.");
+        } else {
+          setError(err.message);
+        }
       } finally {
         setSending(false);
       }

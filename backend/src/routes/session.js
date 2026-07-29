@@ -144,6 +144,7 @@ sessionRouter.post('/:id/answer', answerLimiter, async (req, res, next) => {
     }
 
     const updated = await updateSession(req.params.id, patch);
+    if (!updated) return res.status(404).json({ error: 'Plan not found' });
     res.json({ session: updated, status: statusFor(updated) });
   } catch (err) {
     next(err);
@@ -168,6 +169,7 @@ sessionRouter.post('/:id/advance', async (req, res, next) => {
       current_stage: current_stage + 1,
       current_question_index: 0,
     });
+    if (!updated) return res.status(404).json({ error: 'Plan not found' });
     res.json({ session: updated, status: statusFor(updated) });
   } catch (err) {
     next(err);

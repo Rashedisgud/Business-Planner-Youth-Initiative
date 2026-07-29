@@ -38,6 +38,17 @@ function buildTranscript(session) {
 function messageForStatus(status) {
   if (!status) return null;
   if (status.type === 'question') return { id: `status-q-${status.key}`, role: 'bot', text: status.prompt };
+  return null;
+}
+
+/** An explanation the bot gave in response to "I'm not sure", shown above the repeated question. */
+function noteForStatus(status) {
+  if (!status?.note) return null;
+  return { id: `status-note-${status.key ?? 'x'}`, role: 'bot', text: status.note, kind: 'feedback' };
+}
+
+function trailingStatusMessage(status) {
+  if (!status) return null;
   if (status.type === 'stage1_feedback')
     return { id: 'status-feedback', role: 'bot', text: status.text, kind: 'feedback' };
   if (status.type === 'stage_complete')
@@ -150,8 +161,11 @@ export function useSession({ accessToken = null, resumeSessionId = null } = {}) 
   const messages = useMemo(() => {
     if (!session) return [];
     const transcript = buildTranscript(session);
-    const live = messageForStatus(status);
-    if (live && !transcript.find((m) => m.id === live.id)) transcript.push(live);
+    // An explanation comes before the question it relates to, since the question
+    // is being asked again.
+    for (const msg of [noteForStatus(status), messageForStatus(status), trailingStatusMessage(status)]) {
+      if (msg && !transcript.find((m) => m.id === msg.id)) transcript.push(msg);
+    }
     return transcript;
   }, [session, status]);
 

@@ -7,6 +7,7 @@ import {
   stageAnswersKey,
   isStageComplete,
 } from '../config/questionFlow.js';
+import { clarificationFor } from '../config/clarifications.js';
 import { generateStage1Feedback } from '../llm/stage1Feedback.js';
 import { validateAnswer } from '../llm/validateAnswer.js';
 
@@ -84,6 +85,18 @@ sessionRouter.post('/:id/answer', answerLimiter, async (req, res, next) => {
     }
 
     const question = questionAt(current_stage, current_question_index);
+
+    // Some questions offer to explain themselves. If this reply is asking for
+    // that explanation rather than answering, give it and ask again instead of
+    // recording "I'm not sure" as the answer.
+    const clarification = clarificationFor(question.key, value.trim());
+    if (clarification) {
+      return res.json({
+        session,
+        status: { ...statusFor(session), note: clarification },
+      });
+    }
+
     const cleaned =
       current_stage === 2 ? await validateAnswer(question.prompt, value.trim()) : value.trim();
 

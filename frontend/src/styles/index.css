@@ -300,6 +300,23 @@ body {
 /* Reference notes shown beside a question. Deliberately quieter than a normal
    bot message so it reads as a glossary rather than something asking for a
    reply. */
+.auth-forgot {
+  align-self: flex-start;
+  font-size: 12.5px;
+  margin-bottom: 4px;
+}
+
+.auth-subtle {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: 0 0 14px;
+}
+
+.auth-info {
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+
 .bubble--hint {
   background: transparent;
   border: 1px dashed var(--feedback-border);

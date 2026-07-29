@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function AuthModal({ onClose, onSignIn, onSignUp }) {
+export default function AuthModal({ onClose, onSignIn, onSignUp, onRequestPasswordReset }) {
   const [mode, setMode] = useState('signin'); // 'signin' | 'signup'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -69,6 +69,29 @@ export default function AuthModal({ onClose, onSignIn, onSignUp }) {
 
           {error && <p className="error-text">{error}</p>}
           {info && <p className="reviews-empty">{info}</p>}
+
+          {mode === 'signin' && (
+            <button
+              type="button"
+              className="link-button auth-forgot"
+              onClick={async () => {
+                setError(null);
+                setInfo(null);
+                if (!email) {
+                  setError('Enter your email above first, then click this again.');
+                  return;
+                }
+                try {
+                  await onRequestPasswordReset(email);
+                  setInfo(`If an account exists for ${email}, a reset link is on its way.`);
+                } catch (err) {
+                  setError(err.message);
+                }
+              }}
+            >
+              Forgot your password?
+            </button>
+          )}
 
           <div className="modal-actions">
             <button

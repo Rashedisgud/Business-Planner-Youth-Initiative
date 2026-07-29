@@ -16,6 +16,9 @@
   --bot-bubble-text: #3a322c;
   --feedback-bg: #fff6dd;
   --feedback-border: #f0d78a;
+  /* Muted grey drops to 3.99:1 on white, under the 4.5 needed for body text.
+     Reference notes are meant to be read, so they get a darker tone. */
+  --hint-text: #6e6258;
   --shadow-card: 0 24px 60px -20px rgba(120, 72, 20, 0.25), 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
@@ -34,6 +37,7 @@
     --bot-bubble-text: #f0e6d8;
     --feedback-bg: #3a2e15;
     --feedback-border: #6b4f1c;
+    --hint-text: #d5c9b8;
     --shadow-card: 0 24px 60px -20px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 }
@@ -299,7 +303,7 @@ body {
 .bubble--hint {
   background: transparent;
   border: 1px dashed var(--feedback-border);
-  color: var(--text-muted);
+  color: var(--hint-text);
   font-size: 13.5px;
   max-width: 82%;
 }

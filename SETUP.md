@@ -2,6 +2,24 @@
 
 This is a plain Node.js + React app, so it runs the same way on Windows, macOS, and Linux — the only requirement is Node.js 18+ and npm. Everything below works from PowerShell, cmd, or a Unix shell.
 
+## What it produces
+
+Someone answers 21 questions across three stages and downloads a PDF containing:
+
+| Section | Comes from |
+|---|---|
+| Cover | Their one-line idea |
+| Summary | The five stage 1 answers |
+| Initial Assessment | A model reading of the idea against the competitors they named |
+| The Plan | The seven stage 2 sections |
+| Budget Estimate | Licence, visas, space and marketing, from stage 3 |
+| Revenue Projection | Twelve months built from their own price, customer count and costs |
+| Strengths & Risks | A model reading of everything above, including the figures |
+
+The two projection-related sections appear only when the numeric answers can be
+read as numbers. Nothing is estimated on the founder's behalf — an invented
+forecast in a document someone shows a bank is worse than no forecast.
+
 ## 1. Install dependencies
 
 From the `BYI` folder:
@@ -22,6 +40,7 @@ You need two free accounts:
    - In Project Settings → API, copy the **Project URL** and the **service_role** key (not the anon key — the backend needs full access) for `backend/.env`.
    - Also copy the **anon / publishable** key (a different key, safe to expose in frontend code) for `frontend/.env`.
    - Nothing else to do here — the backend automatically creates its own `founder-photos` storage bucket the first time it starts up.
+   - Optional: if this project ran the earlier version that had a paid tier, its database still holds a `sessions.paid` column and an empty `profiles` table. Nothing reads either. [`supabase/cleanup_legacy.sql`](supabase/cleanup_legacy.sql) removes them if you want the tidier schema — it is safe to skip.
    - Sign-up emails: Supabase requires a confirmation link by default. This project deliberately turns that **off** (Authentication → Providers → Email → uncheck "Confirm email"), so signing up is instant. Accounts here only save and resume plans — they hold nothing sensitive and there are no payments — so the confirmation step cost more users than it protected. The sign-up code handles either setting, so switching it back on later needs no code change.
 
 ## 3. Configure environment variables

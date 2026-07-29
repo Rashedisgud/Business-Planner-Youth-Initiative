@@ -185,8 +185,10 @@ export async function generatePlanPdf(session) {
   const budget = computeBudget(stage3);
   cursor.newPage();
   cursor.heading('Budget Breakdown');
+  const visaText = `${budget.visaCount} ${budget.visaCount === 1 ? 'visa' : 'visas'}`;
+  const spaceText = budget.spaceNeeds === 'none' ? 'no physical space' : `${budget.spaceNeeds} space`;
   cursor.paragraph(
-    `Estimated setup: ${budget.setupType.replace('_', ' ')}, ${budget.visaCount} visa(s), ${budget.spaceNeeds} space.`
+    `Estimated setup: ${budget.setupType.replace('_', ' ')}, ${visaText}, ${spaceText}.`
   );
 
   const colWidths = [260, 130, 130];

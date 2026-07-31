@@ -373,6 +373,47 @@ body {
   box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
 }
 
+/* This had no rule at all and fell back to the browser's default button, which
+   read as a grey slab rather than part of the page. Matches the primary button
+   elsewhere, sized to sit against the input. */
+.answer-input button {
+  flex-shrink: 0;
+  align-self: stretch;
+  min-width: 84px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 14px;
+  background: var(--accent-1);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 10px -4px rgba(217, 119, 6, 0.45);
+  transition: background-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease,
+    opacity 0.12s ease;
+}
+
+.answer-input button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-1) 90%, black);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 14px -4px rgba(217, 119, 6, 0.55);
+}
+
+.answer-input button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.answer-input button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.35);
+}
+
+/* Dimmed rather than greyed out, so an empty box still looks like a button. */
+.answer-input button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .action-row {
   padding: 20px 28px;
   border-top: 1px solid var(--border-soft);

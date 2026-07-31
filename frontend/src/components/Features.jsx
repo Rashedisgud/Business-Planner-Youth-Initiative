@@ -2,24 +2,24 @@ import UaeFlagIcon from './UaeFlagIcon.jsx';
 
 const FEATURES = [
   {
-    icon: '📋',
-    title: 'Structured, not generic',
-    body: 'Every answer is stored as structured data and dropped into a fixed template - not a wall of AI-generated text you have to edit down.',
-  },
-  {
     icon: 'flag',
-    title: 'Built for UAE specifics',
-    body: 'Mainland vs. free zone vs. offshore, visa costs, trade license ranges - the questions and budget benchmarks are written for this market, not adapted from a generic template.',
+    title: 'Written for the UAE',
+    body: 'Mainland, free zone and offshore explained in plain terms, with licence and visa costs from real benchmark ranges rather than a template borrowed from somewhere else.',
   },
   {
-    icon: '🆓',
-    title: 'Completely free',
-    body: 'Every stage - idea check, full business plan, budget estimate, and the PDF download - costs nothing. No card, no subscription, no catch.',
+    icon: '✎',
+    title: 'Your words, kept',
+    body: 'Each answer is stored as its own field and placed in the document. Nothing gets rewritten into something you would not recognise.',
   },
   {
-    icon: '📄',
-    title: 'One clear PDF',
-    body: 'Cover page, full business plan, and a budget table with a plain-language disclaimer - ready to attach to a bank or free zone application.',
+    icon: '↺',
+    title: 'Stop and come back',
+    body: 'Progress saves as you go. Make an account and your plans follow you to another device.',
+  },
+  {
+    icon: '↓',
+    title: 'One PDF at the end',
+    body: 'Plan, budget, revenue projection, and the risks worth planning for. Free, with no card at any point.',
   },
 ];
 

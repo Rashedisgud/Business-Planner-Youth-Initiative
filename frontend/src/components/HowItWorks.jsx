@@ -1,21 +1,21 @@
 const STEPS = [
   {
     n: '1',
-    label: 'Idea Validation',
+    label: 'Check the idea',
     body:
-      "Answer 5 quick questions about your idea, customer, and competitors. Get a sanity check on demand, how you stack up against similar UAE businesses, and the red flags to think through before you go further.",
+      'Four questions about what you want to build, who it serves, and who already does something like it. You get an honest read on whether the demand is there and what to think harder about.',
   },
   {
     n: '2',
-    label: 'Business Plan Builder',
+    label: 'Build the plan',
     body:
-      'Work through 7 sections one at a time - problem, market, product, revenue, marketing, team, and UAE setup type. Every answer is saved as structured data, not just chat text, so it drops cleanly into your PDF.',
+      'Five sections, one at a time: what you sell, how it makes money, how people find you, who is working on it, and how you want to set up in the UAE. Answers are stored as fields, so they land in the document properly rather than as pasted chat.',
   },
   {
     n: '3',
-    label: 'Budget Estimator',
+    label: 'Work out the money',
     body:
-      'Get a cost breakdown for trade license, visas, office or flexi-desk space, and marketing, based on rough UAE benchmark ranges - clearly labeled as estimates, not guaranteed figures.',
+      'Trade licence, staff visas, space, and marketing, priced from benchmark ranges for the UAE. Add what you plan to charge and it projects twelve months of revenue against your running costs.',
   },
 ];
 
@@ -24,7 +24,7 @@ export default function HowItWorks() {
     <section id="how-it-works" className="section">
       <div className="section-inner">
         <span className="section-eyebrow">How it works</span>
-        <h2 className="section-title">Three guided stages, all free. One clear PDF at the end.</h2>
+        <h2 className="section-title">Three stages, then a PDF you can hand over.</h2>
         <div className="steps-grid">
           {STEPS.map((s) => (
             <div className="step-card" key={s.n}>
@@ -35,9 +35,9 @@ export default function HowItWorks() {
           ))}
         </div>
         <p className="steps-footnote">
-          Finish stages 2 and 3, then download a PDF with a cover page, your full business plan,
-          and a budget breakdown table - ready for a bank, free zone application, or your own
-          clarity. No payment at any point.
+          The document covers your plan, a setup budget, a revenue projection, and an honest look
+          at what could go wrong. Every cost figure is labelled as an estimate, because that is
+          what it is.
         </p>
       </div>
     </section>

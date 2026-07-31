@@ -22,17 +22,51 @@ import { validateAnswer } from '../llm/validateAnswer.js';
 export const sessionRouter = Router();
 
 /**
- * Attaches a one-line example to a question so nobody has to know they can ask
- * for help. Only when a question is actually being put to someone - not on
- * reload, which would spend a model call to redisplay something already seen.
- *
- * Failure is silent: the question stands on its own, so a missing nudge costs
- * nothing worth reporting.
+ * Questions worth spending a model call on. These four ask for a figure that
+ * depends entirely on the specific business, which is exactly what a first-time
+ * founder has no way to guess. The written questions are answerable from their
+ * own head, so they get nothing and cost nothing.
  */
+const WORTH_A_NUDGE = new Set([
+  'avg_sale_value',
+  'customers_per_month',
+  'monthly_costs',
+  'marketing_budget',
+]);
+
+/** No business described yet, so nothing to tailor to - a fixed line does the job free. */
+const STATIC_NUDGES = {
+  idea: 'Something like: a mobile car wash, weekend tutoring, or a home bakery. Ask me for ideas if none of those fit.',
+};
+
+/**
+ * Attaches a one-line example so nobody has to know they can ask for help.
+ *
+ * Only when a question is actually being put to someone - not on reload, which
+ * would pay to redisplay something already seen. Failure is silent: the
+ * question stands on its own.
+ */
+function withStaticNudge(status, session) {
+  if (status?.type !== 'question') return status;
+  try {
+    const question = questionAt(session.current_stage, session.current_question_index);
+    const fixed = STATIC_NUDGES[question.key];
+    return fixed ? { ...status, nudge: fixed } : status;
+  } catch {
+    return status;
+  }
+}
+
 async function withNudge(status, session) {
   if (status?.type !== 'question') return status;
   try {
     const question = questionAt(session.current_stage, session.current_question_index);
+
+    const fixed = STATIC_NUDGES[question.key];
+    if (fixed) return { ...status, nudge: fixed };
+
+    if (!WORTH_A_NUDGE.has(question.key)) return status;
+
     const nudge = await nudgeFor(question, session);
     return nudge ? { ...status, nudge } : status;
   } catch {
@@ -69,7 +103,8 @@ function forbiddenIfNotOwner(session, user, res) {
 sessionRouter.post('/', sessionCreateLimiter, async (req, res, next) => {
   try {
     const session = await createSession({ userId: req.user?.id ?? null });
-    res.status(201).json({ session, status: statusFor(session) });
+    // The opening question's example is a fixed string, so this costs nothing.
+    res.status(201).json({ session, status: withStaticNudge(statusFor(session), session) });
   } catch (err) {
     next(err);
   }

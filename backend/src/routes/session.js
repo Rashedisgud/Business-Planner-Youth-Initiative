@@ -14,7 +14,8 @@ import {
   isStageComplete,
 } from '../config/questionFlow.js';
 import { clarificationFor } from '../config/clarifications.js';
-import { smallTalkReplyFor } from '../config/smallTalk.js';
+import { smallTalkReplyFor, isAskingForHelp, hintFromHelpRequest } from '../config/smallTalk.js';
+import { suggestIdeas, suggestAnswerFor } from '../llm/suggestAnswer.js';
 import { generateStage1Feedback } from '../llm/stage1Feedback.js';
 import { validateAnswer } from '../llm/validateAnswer.js';
 
@@ -124,6 +125,26 @@ sessionRouter.post('/:id/answer', answerLimiter, async (req, res, next) => {
         session,
         status: { ...statusFor(session), echo: value.trim(), note: clarification },
       });
+    }
+
+    // Stuck, and asking for a steer. Suggest something and ask again - the
+    // suggestion is never recorded, so the plan stays in their own words.
+    //
+    // Checked before the small talk below, because "no idea" reads as both and
+    // an actual suggestion is far more use than being asked to rephrase.
+    if (isAskingForHelp(value.trim())) {
+      const suggestion =
+        question.key === 'idea'
+          ? await suggestIdeas(hintFromHelpRequest(value.trim()))
+          : await suggestAnswerFor(question, session);
+
+      if (suggestion) {
+        return res.json({
+          session,
+          status: { ...statusFor(session), echo: value.trim(), note: suggestion },
+        });
+      }
+      // Suggestion unavailable - fall through rather than leaving them stuck.
     }
 
     // A greeting isn't an answer. Reply and ask again rather than recording

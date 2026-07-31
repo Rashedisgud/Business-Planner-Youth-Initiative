@@ -70,3 +70,52 @@ export function smallTalkReplyFor(rawAnswer, { isFirstQuestion = false } = {}) {
 
   return null;
 }
+
+// Phrases that only ever mean "I'm asking you", whatever surrounds them.
+const CLEARLY_ASKING =
+  /\b(suggest|suggestions?|any ideas|give me (some )?ideas|some ideas|i don'?t know|dont know|no idea|not sure|no clue|what should i|surprise me|inspire me|i'?m stuck|im stuck|examples? please)\b/i;
+
+// Phrases that also appear inside real answers - "an app that helps you choose
+// a gym" is a business, not a request - so these only count when the whole
+// message is short enough to be nothing but the asking.
+const MAYBE_ASKING =
+  /\b(recommend|help me|you (pick|choose|decide)|examples?|options|stuck|anything)\b/i;
+
+const SHORT_ENOUGH_TO_BE_A_REQUEST = 4;
+
+/**
+ * True when the message is asking for a suggestion rather than giving an answer.
+ *
+ * Deliberately cautious: mistaking someone's real answer for a question is far
+ * worse than missing a request for help, since they can always ask again.
+ */
+export function isAskingForHelp(rawAnswer) {
+  if (typeof rawAnswer !== 'string') return false;
+  const text = rawAnswer.trim();
+  if (!text) return false;
+
+  const words = meaningfulWords(text);
+  if (words.length > 10) return false;
+
+  if (CLEARLY_ASKING.test(text)) return true;
+  return words.length <= SHORT_ENOUGH_TO_BE_A_REQUEST && MAYBE_ASKING.test(text);
+}
+
+const ASKING_FOR_HELP = new RegExp(
+  `${CLEARLY_ASKING.source}|${MAYBE_ASKING.source}`,
+  'gi'
+);
+
+/**
+ * Anything left once the asking is stripped out - "suggest something with food"
+ * yields "something with food", which steers the suggestions.
+ */
+export function hintFromHelpRequest(rawAnswer) {
+  const text = String(rawAnswer || '').trim();
+  const stripped = text
+    .replace(ASKING_FOR_HELP, ' ')
+    .replace(/\b(me|some|any|a|an|the|please|for|of|about|with|something|anything|can|you|i|to|do|know)\b/gi, ' ')
+    .replace(/[^\p{L}\p{N}\s]+/gu, ' ')
+    .trim();
+  return stripped.length >= 3 ? text : null;
+}

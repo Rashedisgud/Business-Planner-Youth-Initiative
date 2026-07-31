@@ -30,6 +30,7 @@ Rules:
 - Be concrete and specific to their business. A number question needs an actual number; a written question needs actual wording they could use.
 - Base it on what they have already told you. Never contradict it.
 - For money and volume questions, pick a figure that is realistic for that kind of business in the UAE at its earliest stage, and say briefly why.
+- Never name real companies, brands or people. You will get them wrong, and a made-up competitor in a document shown to a bank is worse than none. Describe the kind of business instead.
 - Write to them as "you". No preamble, no sign-off, no markdown.`;
 
 const QUESTION_CONTEXT = {
@@ -98,6 +99,58 @@ export async function suggestIdeas(hint) {
     ].join('\n');
   } catch (err) {
     console.error('Idea suggestion failed:', err.message);
+    return null;
+  }
+}
+
+const NUDGE_PROMPT = `You give first-time founders in the UAE a short nudge on a question about their own business plan.
+
+You get their business so far and the question being asked. Reply with one short example of the kind of answer that fits.
+
+Rules:
+- ONE sentence, under 18 words. Shorter is better.
+- Specific to their business. A money question needs an actual AED figure; a written question needs a concrete example.
+- It is a prompt to think with, not their answer. Never write it as though it is settled.
+- Never name real companies, brands or people. You will get them wrong, and a made-up competitor in a document shown to a bank is worse than none. Describe the kind of business instead: "the car wash at your nearest mall", not a name.
+- No preamble, no "for example", no markdown, no quotes. Just the example itself.`;
+
+/**
+ * A short nudge shown under the question without being asked for.
+ *
+ * Kept to one line on purpose. A full answer offered unprompted gets accepted
+ * as-is, and the plan stops being the founder's - which is the whole point of
+ * asking rather than generating. Enough to unblock, not enough to copy.
+ */
+export async function nudgeFor(question, session) {
+  const context = businessContext(session);
+  if (!context) return null;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: OPENAI_MODEL,
+      temperature: 0.6,
+      max_tokens: 60,
+      messages: [
+        { role: 'system', content: NUDGE_PROMPT },
+        {
+          role: 'user',
+          content: [
+            'Their business so far:',
+            context,
+            '',
+            `Question being asked: "${question.prompt}"`,
+            QUESTION_CONTEXT[question.key] ? `Note: ${QUESTION_CONTEXT[question.key]}` : '',
+          ]
+            .filter(Boolean)
+            .join('\n'),
+        },
+      ],
+    });
+
+    const nudge = response.choices[0].message.content.trim().replace(/^["']|["']$/g, '');
+    return nudge ? `Something like: ${nudge}` : null;
+  } catch (err) {
+    console.error('Nudge generation failed:', err.message);
     return null;
   }
 }

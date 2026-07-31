@@ -1,4 +1,4 @@
-export default function MessageBubble({ role, text, kind }) {
+export default function MessageBubble({ role, text, kind, nudge }) {
   const isUser = role === 'user';
   // A hint belongs to the question above it rather than being its own remark,
   // so it sits in the avatar's column instead of repeating the avatar.
@@ -11,6 +11,9 @@ export default function MessageBubble({ role, text, kind }) {
         {text.split('\n').map((line, i) => (
           <p key={i}>{line}</p>
         ))}
+        {/* An example to think with. Set apart from the question so it doesn't
+            read as part of what's being asked. */}
+        {nudge && <p className="bubble-nudge">{nudge}</p>}
       </div>
     </div>
   );

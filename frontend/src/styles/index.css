@@ -319,6 +319,15 @@ body {
   margin-bottom: 4px;
 }
 
+.bubble-nudge {
+  margin-top: 8px !important;
+  padding-top: 8px;
+  border-top: 1px dashed var(--feedback-border);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--hint-text);
+}
+
 .bubble--hint {
   background: transparent;
   border: 1px dashed var(--feedback-border);

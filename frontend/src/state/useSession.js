@@ -62,7 +62,16 @@ function buildTranscript(session) {
 
 function messageForStatus(status) {
   if (!status) return null;
-  if (status.type === 'question') return { id: `status-q-${status.key}`, role: 'bot', text: status.prompt };
+  if (status.type === 'question') {
+    // The example rides along with the question rather than arriving as its own
+    // bubble, so offering one on every question doesn't double the chat.
+    return {
+      id: `status-q-${status.key}`,
+      role: 'bot',
+      text: status.prompt,
+      nudge: status.nudge || null,
+    };
+  }
   return null;
 }
 

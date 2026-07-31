@@ -11,7 +11,7 @@ export default function ChatWindow({ messages, sending }) {
   return (
     <div className="chat-window">
       {messages.map((m) => (
-        <MessageBubble key={m.id} role={m.role} text={m.text} kind={m.kind} />
+        <MessageBubble key={m.id} role={m.role} text={m.text} kind={m.kind} nudge={m.nudge} />
       ))}
       {sending && (
         <div className="bubble-row bubble-row--bot">

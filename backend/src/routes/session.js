@@ -15,11 +15,30 @@ import {
 } from '../config/questionFlow.js';
 import { clarificationFor } from '../config/clarifications.js';
 import { smallTalkReplyFor, isAskingForHelp, hintFromHelpRequest } from '../config/smallTalk.js';
-import { suggestIdeas, suggestAnswerFor } from '../llm/suggestAnswer.js';
+import { suggestIdeas, suggestAnswerFor, nudgeFor } from '../llm/suggestAnswer.js';
 import { generateStage1Feedback } from '../llm/stage1Feedback.js';
 import { validateAnswer } from '../llm/validateAnswer.js';
 
 export const sessionRouter = Router();
+
+/**
+ * Attaches a one-line example to a question so nobody has to know they can ask
+ * for help. Only when a question is actually being put to someone - not on
+ * reload, which would spend a model call to redisplay something already seen.
+ *
+ * Failure is silent: the question stands on its own, so a missing nudge costs
+ * nothing worth reporting.
+ */
+async function withNudge(status, session) {
+  if (status?.type !== 'question') return status;
+  try {
+    const question = questionAt(session.current_stage, session.current_question_index);
+    const nudge = await nudgeFor(question, session);
+    return nudge ? { ...status, nudge } : status;
+  } catch {
+    return status;
+  }
+}
 
 const FEEDBACK_UNAVAILABLE =
   "Your answers are saved, but the automatic feedback couldn't be generated just now. That doesn't affect your plan - continue to the business plan builder and everything you've entered will still be used.";
@@ -182,7 +201,7 @@ sessionRouter.post('/:id/answer', answerLimiter, async (req, res, next) => {
 
     const updated = await updateSession(req.params.id, patch);
     if (!updated) return res.status(404).json({ error: 'Plan not found' });
-    res.json({ session: updated, status: statusFor(updated) });
+    res.json({ session: updated, status: await withNudge(statusFor(updated), updated) });
   } catch (err) {
     next(err);
   }
@@ -207,7 +226,7 @@ sessionRouter.post('/:id/advance', async (req, res, next) => {
       current_question_index: 0,
     });
     if (!updated) return res.status(404).json({ error: 'Plan not found' });
-    res.json({ session: updated, status: statusFor(updated) });
+    res.json({ session: updated, status: await withNudge(statusFor(updated), updated) });
   } catch (err) {
     next(err);
   }

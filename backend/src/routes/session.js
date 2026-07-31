@@ -34,9 +34,13 @@ const WORTH_A_NUDGE = new Set([
   'marketing_budget',
 ]);
 
-/** No business described yet, so nothing to tailor to - a fixed line does the job free. */
+/**
+ * No business described yet, so nothing to tailor to - a fixed line does the job
+ * free. Examples are things someone still at school could genuinely start:
+ * no premises, no staff, no vehicle.
+ */
 const STATIC_NUDGES = {
-  idea: 'Something like: a mobile car wash, weekend tutoring, or a home bakery. Ask me for ideas if none of those fit.',
+  idea: 'Something like: weekend tutoring, running social media for a local shop, or selling something you make. Ask me for ideas if none of those fit.',
 };
 
 /**

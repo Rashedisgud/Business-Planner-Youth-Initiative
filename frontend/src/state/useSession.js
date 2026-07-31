@@ -60,6 +60,28 @@ function buildTranscript(session) {
   return messages;
 }
 
+/**
+ * A stage's opening line and its first question arrive as two bubbles back to
+ * back, which reads as the bot talking twice before anyone has said anything.
+ * They're one message instead - the greeting leads, the question follows.
+ */
+function mergeIntroIntoQuestion(messages) {
+  const isIntro = (m) => m.role === 'bot' && m.id.startsWith('intro-');
+  const isQuestion = (m) => m.role === 'bot' && /^(status-)?q-/.test(m.id);
+
+  const merged = [];
+  for (const msg of messages) {
+    const previous = merged[merged.length - 1];
+    if (previous && isIntro(previous) && isQuestion(msg)) {
+      // Keep the question's identity and its example; take the greeting's words.
+      merged[merged.length - 1] = { ...msg, text: `${previous.text}\n\n${msg.text}` };
+      continue;
+    }
+    merged.push(msg);
+  }
+  return merged;
+}
+
 function messageForStatus(status) {
   if (!status) return null;
   if (status.type === 'question') {
@@ -242,7 +264,7 @@ export function useSession({ accessToken = null, resumeSessionId = null } = {}) 
     ]) {
       if (msg && !transcript.find((m) => m.id === msg.id)) transcript.push(msg);
     }
-    return transcript;
+    return mergeIntroIntoQuestion(transcript);
   }, [session, status]);
 
   return {

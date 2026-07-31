@@ -9,19 +9,23 @@ import { openai, OPENAI_MODEL } from './openaiClient.js';
  * ends up in front of a bank.
  */
 
-const IDEA_PROMPT = `You suggest business ideas to first-time founders in the UAE.
+const IDEA_PROMPT = `You suggest business ideas to teenagers and young people in the UAE starting their first business.
 
 Give exactly three ideas, each on its own line starting with "- ".
 
 Rules:
 - Each is one sentence, under 20 words, concrete enough to picture.
-- Realistic for a young founder starting with modest money - a service, a small shop, a niche product. Not apps needing investors or anything requiring a licence that takes years.
+- They are young, often still studying, with little or no money to start. Suggest things that can begin small, from home or a laptop, and run around school or university. Tutoring, content and design work for local shops, handmade or printed goods, pet sitting, event help, coaching a skill they already have, reselling.
+- Nothing needing staff, premises, a vehicle, heavy equipment, investors, or a licence that takes years.
+- Nothing age-restricted: no alcohol, tobacco, vaping, gambling, driving-based work, or anything requiring a professional qualification they wouldn't hold yet.
 - Suited to the UAE: the climate, the population, how people live and shop there.
 - Vary them. Three versions of the same idea is no help.
 - If they hinted at an interest, all three should follow it.
 - No preamble, no numbering, no closing line. Only the three lines.`;
 
-const ANSWER_PROMPT = `You help first-time founders in the UAE answer one question about their own business plan.
+const ANSWER_PROMPT = `You help a teenager or young person in the UAE answer one question about their own business plan.
+
+They are starting their first business, often while studying, with very little money. Any figure you give should reflect that: small budgets, modest customer numbers, costs someone their age could actually cover.
 
 You get their business so far and the question they are stuck on. Reply with a suggested answer they could give.
 
@@ -103,7 +107,9 @@ export async function suggestIdeas(hint) {
   }
 }
 
-const NUDGE_PROMPT = `You give first-time founders in the UAE a short nudge on a question about their own business plan.
+const NUDGE_PROMPT = `You give a teenager or young person in the UAE a short nudge on a question about their own business plan.
+
+They are starting their first business, often while studying, with very little money. Any figure you give should reflect that: small budgets, modest customer numbers, costs someone their age could actually cover.
 
 You get their business so far and the question being asked. Reply with one short example of the kind of answer that fits.
 

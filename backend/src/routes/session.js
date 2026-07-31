@@ -14,6 +14,7 @@ import {
   isStageComplete,
 } from '../config/questionFlow.js';
 import { clarificationFor } from '../config/clarifications.js';
+import { smallTalkReplyFor } from '../config/smallTalk.js';
 import { generateStage1Feedback } from '../llm/stage1Feedback.js';
 import { validateAnswer } from '../llm/validateAnswer.js';
 
@@ -114,11 +115,26 @@ sessionRouter.post('/:id/answer', answerLimiter, async (req, res, next) => {
     // Some questions offer to explain themselves. If this reply is asking for
     // that explanation rather than answering, give it and ask again instead of
     // recording "I'm not sure" as the answer.
+    // Neither of these is recorded as an answer, so `echo` carries the message
+    // back for the transcript - otherwise what they typed disappears and the
+    // reply reads like the bot talking to itself.
     const clarification = clarificationFor(question.key, value.trim());
     if (clarification) {
       return res.json({
         session,
-        status: { ...statusFor(session), note: clarification },
+        status: { ...statusFor(session), echo: value.trim(), note: clarification },
+      });
+    }
+
+    // A greeting isn't an answer. Reply and ask again rather than recording
+    // "hello" as their business idea.
+    const smallTalk = smallTalkReplyFor(value.trim(), {
+      isFirstQuestion: current_stage === 1 && current_question_index === 0,
+    });
+    if (smallTalk) {
+      return res.json({
+        session,
+        status: { ...statusFor(session), echo: value.trim(), note: smallTalk },
       });
     }
 

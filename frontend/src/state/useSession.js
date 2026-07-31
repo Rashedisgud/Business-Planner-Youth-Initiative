@@ -73,6 +73,14 @@ function hintForStatus(status, session) {
   return hint ? { id: `status-hint-${status.key}`, role: 'bot', ...hint } : null;
 }
 
+/** What they typed, when it wasn't recorded as an answer - a greeting, or a
+    request for an explanation. Without it the reply reads like the bot talking
+    to itself. */
+function echoForStatus(status) {
+  if (!status?.echo) return null;
+  return { id: `status-echo-${status.key ?? 'x'}`, role: 'user', text: status.echo };
+}
+
 /** An explanation the bot gave in response to "I'm not sure", shown above the repeated question. */
 function noteForStatus(status) {
   if (!status?.note) return null;
@@ -217,6 +225,7 @@ export function useSession({ accessToken = null, resumeSessionId = null } = {}) 
     // An explanation comes before the question it relates to, since the question
     // is being asked again.
     for (const msg of [
+      echoForStatus(status),
       noteForStatus(status),
       messageForStatus(status),
       hintForStatus(status, session),

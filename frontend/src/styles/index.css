@@ -1,43 +1,52 @@
-* {
+﻿* {
   box-sizing: border-box;
 }
 
 :root {
-  --bg-page-1: #fdf6ec;
-  --bg-page-2: #fbeee0;
+  --bg-page-1: #f6f9fb;
+  --bg-page-2: #eaf0f5;
   --card-bg: #ffffff;
-  --text-main: #2a2320;
-  --text-muted: #8a7d72;
-  --border-soft: #eee3d6;
-  --accent-1: #d97706;
-  --accent-2: #f59e0b;
+  --text-main: #17232e;
+  --text-muted: #5a6b7a;
+  --border-soft: #dde5ec;
+  --accent-1: #14607a;
+  --accent-2: #1a86a8;
   --accent-ink: #ffffff;
-  --bot-bubble-bg: #f6f1e9;
-  --bot-bubble-text: #3a322c;
-  --feedback-bg: #fff6dd;
-  --feedback-border: #f0d78a;
-  /* Muted grey drops to 3.99:1 on white, under the 4.5 needed for body text.
-     Reference notes are meant to be read, so they get a darker tone. */
-  --hint-text: #6e6258;
-  --shadow-card: 0 24px 60px -20px rgba(120, 72, 20, 0.25), 0 2px 8px rgba(0, 0, 0, 0.04);
+  /* The accent as raw channels, so shadows and focus rings can be tinted from
+     the same source. They used to be hardcoded orange in a dozen places, which
+     is why changing the colour meant hunting through the file. */
+  --accent-rgb: 20, 96, 122;
+  --accent-2-rgb: 26, 134, 168;
+  --shadow-rgb: 23, 42, 58;
+  --bot-bubble-bg: #eef3f7;
+  --bot-bubble-text: #24323d;
+  --feedback-bg: #e9f4f8;
+  --feedback-border: #a9d3e0;
+  /* Muted grey drops below the 4.5 needed for body text on white. Reference
+     notes are meant to be read, so they get a darker tone. */
+  --hint-text: #4d6273;
+  --shadow-card: 0 24px 60px -20px rgba(23, 42, 58, 0.18), 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-page-1: #1c1712;
-    --bg-page-2: #241c15;
-    --card-bg: #211a14;
-    --text-main: #f3ebe0;
-    --text-muted: #b5a897;
-    --border-soft: #382c22;
-    --accent-1: #f59e0b;
-    --accent-2: #d97706;
-    --accent-ink: #211a14;
-    --bot-bubble-bg: #2c2419;
-    --bot-bubble-text: #f0e6d8;
-    --feedback-bg: #3a2e15;
-    --feedback-border: #6b4f1c;
-    --hint-text: #d5c9b8;
+    --bg-page-1: #101820;
+    --bg-page-2: #16212b;
+    --card-bg: #141d26;
+    --text-main: #e8eef4;
+    --text-muted: #9fb0bf;
+    --border-soft: #26333f;
+    --accent-1: #4db8d4;
+    --accent-2: #2f93b0;
+    --accent-ink: #0c1319;
+    --accent-rgb: 77, 184, 212;
+    --accent-2-rgb: 47, 147, 176;
+    --shadow-rgb: 0, 0, 0;
+    --bot-bubble-bg: #1c2833;
+    --bot-bubble-text: #e3ebf2;
+    --feedback-bg: #16323d;
+    --feedback-border: #2c5b6b;
+    --hint-text: #b9cad7;
     --shadow-card: 0 24px 60px -20px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 }
@@ -78,7 +87,7 @@ body {
 .app-header {
   padding: 22px 28px 18px;
   border-bottom: 1px solid var(--border-soft);
-  background: linear-gradient(135deg, rgba(217, 119, 6, 0.08), rgba(245, 158, 11, 0.03));
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.08), rgba(var(--accent-2-rgb), 0.04));
 }
 
 .brand-row {
@@ -172,7 +181,7 @@ body {
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
   color: var(--accent-ink);
   border-color: transparent;
-  box-shadow: 0 4px 10px -2px rgba(217, 119, 6, 0.5);
+  box-shadow: 0 4px 10px -2px rgba(var(--accent-rgb), 0.5);
 }
 
 .stage-dot--done {
@@ -284,7 +293,7 @@ body {
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
   color: #fff;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 6px 16px -6px rgba(217, 119, 6, 0.45);
+  box-shadow: 0 6px 16px -6px rgba(var(--accent-rgb), 0.45);
 }
 
 .bubble--feedback {
@@ -370,7 +379,7 @@ body {
 .answer-input textarea:focus {
   outline: none;
   border-color: var(--accent-2);
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 0 3px rgba(var(--accent-2-rgb), 0.25);
 }
 
 /* This had no rule at all and fell back to the browser's default button, which
@@ -389,14 +398,14 @@ body {
   font-size: 14.5px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 10px -4px rgba(217, 119, 6, 0.45);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 10px -4px rgba(var(--accent-rgb), 0.45);
   transition: background-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease,
     opacity 0.12s ease;
 }
 
 .answer-input button:hover:not(:disabled) {
   background: color-mix(in srgb, var(--accent-1) 90%, black);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 14px -4px rgba(217, 119, 6, 0.55);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 14px -4px rgba(var(--accent-rgb), 0.55);
 }
 
 .answer-input button:active:not(:disabled) {
@@ -405,7 +414,7 @@ body {
 
 .answer-input button:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 0 0 3px rgba(var(--accent-2-rgb), 0.35);
 }
 
 /* Dimmed rather than greyed out, so an empty box still looks like a button. */
@@ -448,12 +457,12 @@ body {
 .btn-primary {
   background: var(--accent-1);
   color: #fff;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 10px -4px rgba(217, 119, 6, 0.45);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 10px -4px rgba(var(--accent-rgb), 0.45);
 }
 
 .btn-primary:hover:not(:disabled) {
   background: color-mix(in srgb, var(--accent-1) 90%, black);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 14px -4px rgba(217, 119, 6, 0.55);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 14px -4px rgba(var(--accent-rgb), 0.55);
 }
 
 .btn-primary:active:not(:disabled) {
@@ -691,7 +700,7 @@ body {
 .founder-edit-form textarea:focus {
   outline: none;
   border-color: var(--accent-2);
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 0 3px rgba(var(--accent-2-rgb), 0.25);
 }
 
 .link-button {
@@ -996,7 +1005,7 @@ button.nav-brand {
   border-radius: 10px 10px 0 0;
   border: 1px solid var(--border-soft);
   border-bottom: none;
-  box-shadow: 0 24px 50px -18px rgba(120, 72, 20, 0.45);
+  box-shadow: 0 24px 50px -18px rgba(var(--shadow-rgb), 0.35);
   overflow: hidden;
   text-align: left;
 }
@@ -1025,7 +1034,7 @@ button.nav-brand {
   display: block;
   height: 11px;
   border-radius: 3px;
-  background: #2a2320;
+  background: #17232e;
   margin-bottom: 7px;
 }
 
@@ -1043,7 +1052,7 @@ button.nav-brand {
   width: 74px;
   height: 6px;
   border-radius: 2px;
-  background: #cfc6bb;
+  background: #c3ced8;
 }
 
 .hero-doc-rows {
@@ -1054,7 +1063,7 @@ button.nav-brand {
   display: block;
   height: 5px;
   border-radius: 2px;
-  background: #e6ded4;
+  background: #dfe6ed;
   margin-bottom: 8px;
 }
 
@@ -1289,7 +1298,7 @@ button.nav-brand {
 .admin-unlock-form input:focus {
   outline: none;
   border-color: var(--accent-2);
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 0 3px rgba(var(--accent-2-rgb), 0.25);
 }
 
 .reviews-manage-link {

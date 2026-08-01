@@ -7,12 +7,14 @@ const MARGIN = 56;
 const CONTENT_WIDTH = PAGE_SIZE[0] - MARGIN * 2;
 const FOOTER_TOP = MARGIN + 34; // content must not run below this
 
-const ACCENT = rgb(0.85, 0.47, 0.02);
-const INK = rgb(0.16, 0.14, 0.13);
-const BODY = rgb(0.25, 0.23, 0.21);
-const MUTED = rgb(0.48, 0.45, 0.42);
-const RULE = rgb(0.88, 0.86, 0.83);
-const SHADE = rgb(0.97, 0.96, 0.94);
+// Kept in step with the site's palette so the document doesn't arrive looking
+// like it came from somewhere else.
+const ACCENT = rgb(0.078, 0.376, 0.478); // #14607a
+const INK = rgb(0.09, 0.137, 0.18); // #17232e
+const BODY = rgb(0.192, 0.255, 0.31);
+const MUTED = rgb(0.353, 0.42, 0.478);
+const RULE = rgb(0.867, 0.898, 0.925);
+const SHADE = rgb(0.957, 0.973, 0.984);
 
 const DISCLAIMER =
   'Figures are rough estimates for early planning only. Confirm exact costs with the relevant free zone authority or the Dubai Department of Economy and Tourism (DED) before acting.';

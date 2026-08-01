@@ -1340,6 +1340,23 @@ button.nav-brand {
   margin-bottom: 14px;
 }
 
+.footer-contact {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+.footer-contact a {
+  color: var(--accent-1);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.footer-contact a:hover {
+  border-bottom-color: var(--accent-1);
+}
+
 .footer-disclaimer {
   font-size: 12.5px;
   line-height: 1.6;

@@ -25,10 +25,11 @@ const QUESTION_HINTS = {
   // repeating the whole thing would just be clutter.
   '2:setup_type': [
     'Quick guide:',
+    "Not registering yet - you're testing whether the idea works before paying for anything. Costs nothing, and the plan still shows what setting up would cost later.",
     'Mainland - trade with anyone in the UAE, most activities allow full foreign ownership, usually needs real office space.',
-    "Free zone - usually the cheapest and quickest to set up, but selling directly into the mainland typically needs a local distributor.",
+    'Free zone - usually the cheapest and quickest to register, but selling directly into the mainland typically needs a local distributor.',
     "Offshore - for holding assets or business outside the UAE only; you can't trade inside the UAE and it doesn't come with visas.",
-    'Most first-time founders serving UAE customers start in a free zone, though it varies by emirate and activity.',
+    'Plenty of people start by not registering at all, and only pick one of the others once money is actually coming in.',
   ].join('\n'),
 };
 

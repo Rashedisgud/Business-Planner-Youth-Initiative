@@ -10,8 +10,24 @@ const BENCHMARKS = JSON.parse(
   )
 );
 
+/**
+ * Which setup, including not having one.
+ *
+ * Plenty of people here are testing an idea rather than registering a company,
+ * and billing them for a trade licence they have not bought puts thousands of
+ * dirhams of imaginary cost in front of someone deciding whether to start at
+ * all. Checked first, since "not registering as a free zone company yet"
+ * mentions free zone.
+ */
 function matchSetupType(text = '') {
   const t = text.toLowerCase();
+  if (
+    /\b(not yet|not registering|no licen[cs]e|without a licen[cs]e|just testing|testing (it|the idea)|too early|informal|not ready|haven'?t decided|side project|hobby|no company)\b/.test(
+      t
+    )
+  ) {
+    return 'not_yet';
+  }
   if (t.includes('free zone') || t.includes('freezone')) return 'free_zone';
   if (t.includes('offshore')) return 'offshore';
   if (t.includes('mainland')) return 'mainland';
@@ -98,8 +114,12 @@ function bucketMarketingBudget(text = '') {
 export function computeBudget(answers = {}) {
   const setupType = matchSetupType(answers.setup_type);
   const spaceNeeds = matchSpaceNeeds(answers.space_needs);
-  const visaCount = extractVisaCount(answers.team ?? answers.team_size);
   const marketing = bucketMarketingBudget(answers.marketing_budget);
+
+  // No company means nothing to sponsor a visa through, whatever was said about
+  // the team.
+  const visaCount =
+    setupType === 'not_yet' ? 0 : extractVisaCount(answers.team ?? answers.team_size);
 
   const license = BENCHMARKS.trade_license[setupType];
   const visa = BENCHMARKS.visa_cost_per_person;
@@ -108,7 +128,10 @@ export function computeBudget(answers = {}) {
 
   const lineItems = [
     {
-      label: `Trade license (${setupType.replace('_', ' ')})`,
+      label:
+        setupType === 'not_yet'
+          ? 'Trade licence (not registering yet)'
+          : `Trade licence (${setupType.replace('_', ' ')})`,
       min: license.min,
       max: license.max,
       unit: license.unit,
@@ -129,12 +152,22 @@ export function computeBudget(answers = {}) {
       max: space.max,
       unit: space.unit,
     },
-    {
-      label: `Marketing (${marketing.bucket} estimate)`,
-      min: marketingRange.min * 12,
-      max: marketingRange.max * 12,
-      unit: 'per year (12mo est.)',
-    },
+    // Their own figure wins over the benchmark band. Someone who says 300 a
+    // month should not be handed a 12,000 to 36,000 marketing line - the band
+    // exists for when no number was given at all.
+    marketing.stated !== null
+      ? {
+          label: `Marketing (${marketing.stated.toLocaleString()} AED/month, as you said)`,
+          min: marketing.stated * 12,
+          max: marketing.stated * 12,
+          unit: 'per year',
+        }
+      : {
+          label: `Marketing (${marketing.bucket} estimate)`,
+          min: marketingRange.min * 12,
+          max: marketingRange.max * 12,
+          unit: 'per year (12mo est.)',
+        },
   ];
 
   const totalMin = lineItems.reduce((sum, i) => sum + i.min, 0);

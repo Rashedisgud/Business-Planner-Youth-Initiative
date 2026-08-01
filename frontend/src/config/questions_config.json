@@ -8,7 +8,7 @@
   { "stage": 2, "key": "revenue_model", "prompt": "How will you make money? Mention pricing if you have it in mind." },
   { "stage": 2, "key": "marketing_plan", "prompt": "How will you reach your first customers?" },
   { "stage": 2, "key": "team", "prompt": "Who's building this with you - just you, or do you have people alongside you?" },
-  { "stage": 2, "key": "setup_type", "prompt": "Which UAE setup suits you best - mainland, free zone, or offshore? Here's a quick guide if these are new to you, and just ask if anything's unclear." },
+  { "stage": 2, "key": "setup_type", "prompt": "How do you want to set up? If you're testing the idea and not registering a company yet, say so - that's a real answer. Otherwise it's mainland, free zone, or offshore, and there's a guide below." },
 
   { "stage": 3, "key": "space_needs", "prompt": "What space do you need - none, a flexi-desk, an office, or retail?" },
   { "stage": 3, "key": "marketing_budget", "prompt": "Roughly what will you spend on marketing each month, in AED?" },

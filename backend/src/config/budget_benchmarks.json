@@ -1,6 +1,7 @@
 {
   "disclaimer": "These are rough, non-binding estimates for early planning only. Confirm exact figures with the relevant free zone authority or the Dubai Department of Economy and Tourism (DED) before acting.",
   "trade_license": {
+    "not_yet": { "min": 0, "max": 0, "currency": "AED", "unit": "nothing to pay yet" },
     "mainland": { "min": 12000, "max": 25000, "currency": "AED", "unit": "per year" },
     "free_zone": { "min": 8000, "max": 20000, "currency": "AED", "unit": "per year" },
     "offshore": { "min": 6000, "max": 15000, "currency": "AED", "unit": "per year" }

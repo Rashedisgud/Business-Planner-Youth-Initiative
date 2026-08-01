@@ -14,13 +14,34 @@ export default function Hero({ onStart }) {
           <button className="btn-primary btn-lg" onClick={onStart}>
             Get started
           </button>
-          <a className="hero-secondary-link" href="#how-it-works">
-            See how it works ↓
-          </a>
         </div>
         <p className="hero-note">
           Around five minutes from start to finish. Nothing to pay at any point.
         </p>
+
+        {/* A miniature of the real cover page. It replaced a "see how it works"
+            link that pointed at the section directly below it, and being cut off
+            at the fold does the same job of showing there is more down there. */}
+        <div className="hero-doc" aria-hidden="true">
+          <div className="hero-doc-page">
+            <div className="hero-doc-bar" />
+            <div className="hero-doc-body">
+              <span className="hero-doc-eyebrow">BUSINESS PLAN</span>
+              <div className="hero-doc-title">
+                <span />
+                <span />
+              </div>
+              <div className="hero-doc-rule" />
+              <div className="hero-doc-date" />
+              <div className="hero-doc-rows">
+                <span />
+                <span />
+                <span />
+                <span />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

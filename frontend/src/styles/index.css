@@ -968,23 +968,114 @@ button.nav-brand {
   font-size: 16px;
 }
 
-.hero-secondary-link {
-  color: var(--text-main);
-  font-weight: 600;
-  font-size: 14.5px;
-  text-decoration: none;
-  border-bottom: 1.5px solid var(--border-soft);
-  padding-bottom: 2px;
-}
-
-.hero-secondary-link:hover {
-  border-color: var(--accent-1);
-  color: var(--accent-1);
-}
-
 .hero-note {
   font-size: 13px;
   color: var(--text-muted);
+}
+
+/* Miniature of the cover page the chat produces. Deliberately clipped at the
+   bottom: the page continues past it, which shows there is more to scroll
+   without a link saying so. */
+.hero-doc {
+  margin-top: 46px;
+  display: flex;
+  justify-content: center;
+  /* Top-aligned so the page keeps its A4 proportions and overflows, rather than
+     being squashed to the height of this box. */
+  align-items: flex-start;
+  max-height: 220px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+}
+
+.hero-doc-page {
+  width: 300px;
+  aspect-ratio: 1 / 1.414;
+  background: #fff;
+  border-radius: 10px 10px 0 0;
+  border: 1px solid var(--border-soft);
+  border-bottom: none;
+  box-shadow: 0 24px 50px -18px rgba(120, 72, 20, 0.45);
+  overflow: hidden;
+  text-align: left;
+}
+
+.hero-doc-bar {
+  height: 7px;
+  background: var(--accent-1);
+}
+
+.hero-doc-body {
+  padding: 46px 30px 0;
+}
+
+.hero-doc-eyebrow {
+  display: block;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--accent-1);
+  margin-bottom: 12px;
+}
+
+/* Bars rather than words: it reads as a document without pretending to be a
+   real plan belonging to anyone. */
+.hero-doc-title span {
+  display: block;
+  height: 11px;
+  border-radius: 3px;
+  background: #2a2320;
+  margin-bottom: 7px;
+}
+
+.hero-doc-title span:first-child { width: 92%; }
+.hero-doc-title span:last-child { width: 62%; }
+
+.hero-doc-rule {
+  width: 44px;
+  height: 3px;
+  background: var(--accent-1);
+  margin: 18px 0 12px;
+}
+
+.hero-doc-date {
+  width: 74px;
+  height: 6px;
+  border-radius: 2px;
+  background: #cfc6bb;
+}
+
+.hero-doc-rows {
+  margin-top: 30px;
+}
+
+.hero-doc-rows span {
+  display: block;
+  height: 5px;
+  border-radius: 2px;
+  background: #e6ded4;
+  margin-bottom: 8px;
+}
+
+.hero-doc-rows span:nth-child(1) { width: 100%; }
+.hero-doc-rows span:nth-child(2) { width: 88%; }
+.hero-doc-rows span:nth-child(3) { width: 94%; }
+.hero-doc-rows span:nth-child(4) { width: 70%; }
+
+@media (max-width: 640px) {
+  .hero-doc {
+    margin-top: 34px;
+    max-height: 170px;
+  }
+
+  .hero-doc-page {
+    width: 230px;
+  }
+
+  .hero-doc-body {
+    padding: 34px 22px 0;
+  }
 }
 
 @media (max-width: 640px) {

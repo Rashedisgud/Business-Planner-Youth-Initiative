@@ -562,6 +562,17 @@ export async function generatePlanPdf(session, { analysis = null, conclusion = n
         : 'On these numbers monthly revenue does not overtake monthly costs within the first year. Raising the price, winning customers faster, or cutting running costs would each change that.'
     );
 
+    // The compounding above assumes nobody ever cancels and that there is no
+    // limit on how many customers can be served. Left unsaid, that quietly
+    // turns into a number nobody could deliver - and it is the founder who
+    // would have to defend it.
+    if (projection.recurring) {
+      const finalCount = projection.months[projection.months.length - 1].payingCustomers;
+      d.bullet(
+        `This assumes nobody cancels, so by month 12 it has ${finalCount.toLocaleString()} customers all still paying. Check you could actually serve that many, and knock the numbers down if not.`
+      );
+    }
+
     d.y -= 8;
     d.paragraph(
       'This projection is arithmetic on the figures you supplied, not a forecast or a guarantee. Real results depend on demand, pricing power, and how quickly you can actually win customers. Treat it as a way to test whether your assumptions hold together.',

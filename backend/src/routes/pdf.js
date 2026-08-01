@@ -4,6 +4,7 @@ import { generatePlanPdf } from '../pdf/generatePlan.js';
 import { computeBudget } from '../pdf/budgetCalculator.js';
 import { computeProjection } from '../pdf/revenueProjection.js';
 import { generateProsAndCons } from '../llm/prosAndCons.js';
+import { generateConclusion } from '../llm/conclusion.js';
 
 export const pdfRouter = Router();
 
@@ -25,14 +26,24 @@ pdfRouter.get('/:id/pdf', async (req, res, next) => {
       ...(session.stage3_answers || {}),
     });
     const projection = computeProjection(session.stage3_answers || {}, budget);
-    const analysis = await generateProsAndCons({
-      stage1: session.stage1_answers || {},
-      stage2: session.stage2_answers || {},
-      budget,
-      projection,
-    });
+    // Run together rather than one after the other - they don't depend on each
+    // other, and waiting for both in sequence doubles the wait on a download.
+    const [analysis, conclusion] = await Promise.all([
+      generateProsAndCons({
+        stage1: session.stage1_answers || {},
+        stage2: session.stage2_answers || {},
+        budget,
+        projection,
+      }),
+      generateConclusion({
+        stage1: session.stage1_answers || {},
+        stage2: session.stage2_answers || {},
+        budget,
+        projection,
+      }),
+    ]);
 
-    const bytes = await generatePlanPdf(session, { analysis });
+    const bytes = await generatePlanPdf(session, { analysis, conclusion });
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="business-plan-${session.id}.pdf"`);
     res.send(Buffer.from(bytes));

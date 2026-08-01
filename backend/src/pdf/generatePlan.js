@@ -352,7 +352,7 @@ function renderAssessment(d, feedback) {
   }
 }
 
-export async function generatePlanPdf(session, { analysis = null } = {}) {
+export async function generatePlanPdf(session, { analysis = null, conclusion = null } = {}) {
   const doc = await PDFDocument.create();
   const regular = await doc.embedFont(StandardFonts.Helvetica);
   const bold = await doc.embedFont(StandardFonts.HelveticaBold);
@@ -469,10 +469,12 @@ export async function generatePlanPdf(session, { analysis = null } = {}) {
       : `${budget.visaCount} staff ${budget.visaCount === 1 ? 'visa' : 'visas'}`;
   const spaceText =
     budget.spaceNeeds === 'none' ? 'no physical space' : `${budget.spaceNeeds} space`;
-  d.paragraph(
-    `Based on a ${budget.setupType.replace('_', ' ')} setup with ${visaText} and ${spaceText}.`,
-    { gap: 16 }
-  );
+  // "a not yet setup" is not a sentence, so that case gets its own wording.
+  const basis =
+    budget.setupType === 'not_yet'
+      ? `Based on not registering a company yet, with ${visaText} and ${spaceText}.`
+      : `Based on a ${budget.setupType.replace('_', ' ')} setup with ${visaText} and ${spaceText}.`;
+  d.paragraph(basis, { gap: 16 });
 
   const colX = [MARGIN, MARGIN + 330, MARGIN + CONTENT_WIDTH];
   d.tableRow(['Item', 'Low (AED)', 'High (AED)'], colX, {
@@ -591,6 +593,26 @@ export async function generatePlanPdf(session, { analysis = null } = {}) {
       'These points are a prompt for your own thinking, not a verdict on the business. Work through the risks before committing money.',
       { size: 9.5, color: MUTED }
     );
+  }
+
+  /* ---------- Conclusion ---------- */
+  if (conclusion && (conclusion.verdict || conclusion.steps.length)) {
+    d.newPage();
+    d.sectionTitle('Where This Leaves You');
+
+    if (conclusion.verdict) {
+      d.paragraph(conclusion.verdict, { gap: 20 });
+    }
+
+    if (conclusion.steps.length) {
+      d.subheading('What to do next');
+      conclusion.steps.forEach((step) => d.bullet(step));
+      d.y -= 10;
+      d.paragraph(
+        'None of these need money or permission. They are the cheapest ways to find out whether the assumptions in this plan hold before you commit to them.',
+        { size: 9.5, color: MUTED }
+      );
+    }
   }
 
   /* ---------- Page numbers (skip the cover) ---------- */

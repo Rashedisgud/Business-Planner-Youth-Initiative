@@ -3,11 +3,87 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Business Planner Youth Initiative (BPYI) | Free UAE business plan builder</title>
     <meta
       name="description"
-      content="A free guided chatbot that turns a UAE business idea into a structured business plan and budget estimate, with a downloadable PDF."
+      content="A free guided chatbot that turns a UAE business idea into a structured business plan, setup budget and revenue projection. Founded by Rashed Alkhyeli and Ahmed Al Zaabi."
     />
-    <title>Business Planner Youth Initiative (BPYI)</title>
+    <link rel="canonical" href="https://bypi.org/" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Shown when the page is shared or linked. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://bypi.org/" />
+    <meta property="og:site_name" content="Business Planner Youth Initiative" />
+    <meta property="og:title" content="Business Planner Youth Initiative (BPYI)" />
+    <meta
+      property="og:description"
+      content="Turn a business idea into a plan a bank will accept. Free, built for young founders in the UAE."
+    />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Business Planner Youth Initiative (BPYI)" />
+    <meta
+      name="twitter:description"
+      content="Turn a business idea into a plan a bank will accept. Free, built for young founders in the UAE."
+    />
+
+    <!--
+      The page is rendered by JavaScript, so a crawler's first look at it is an
+      empty div. This describes the site and the people behind it in the HTML
+      itself, which is what search engines read to connect a name to a site.
+
+      NOTE: the names here are also stored in the database and editable from
+      /#admin. If you change them there, change them here too, or a search for
+      the new name will not find this page.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://bypi.org/#organization",
+            "name": "Business Planner Youth Initiative",
+            "alternateName": "BPYI",
+            "url": "https://bypi.org/",
+            "description": "A free guided tool that helps young people in the UAE turn a business idea into a structured business plan, setup budget and revenue projection.",
+            "areaServed": { "@type": "Country", "name": "United Arab Emirates" },
+            "founder": [
+              { "@id": "https://bypi.org/#rashed-alkhyeli" },
+              { "@id": "https://bypi.org/#ahmed-al-zaabi" }
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://bypi.org/#rashed-alkhyeli",
+            "name": "Rashed Alkhyeli",
+            "jobTitle": "Founder",
+            "nationality": { "@type": "Country", "name": "United Arab Emirates" },
+            "worksFor": { "@id": "https://bypi.org/#organization" },
+            "url": "https://bypi.org/#founder"
+          },
+          {
+            "@type": "Person",
+            "@id": "https://bypi.org/#ahmed-al-zaabi",
+            "name": "Ahmed Al Zaabi",
+            "jobTitle": "Co-founder",
+            "nationality": { "@type": "Country", "name": "United Arab Emirates" },
+            "worksFor": { "@id": "https://bypi.org/#organization" },
+            "url": "https://bypi.org/#founder"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://bypi.org/#website",
+            "url": "https://bypi.org/",
+            "name": "Business Planner Youth Initiative",
+            "publisher": { "@id": "https://bypi.org/#organization" },
+            "inLanguage": "en"
+          }
+        ]
+      }
+    </script>
+
     <link
       rel="icon"
       type="image/svg+xml"
@@ -22,6 +98,25 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!--
+      Replaced the moment the app mounts, so nobody with JavaScript ever sees
+      this. It exists so a crawler that does not run scripts still finds real
+      words rather than an empty page.
+    -->
+    <noscript>
+      <h1>Business Planner Youth Initiative (BPYI)</h1>
+      <p>
+        A free guided tool that helps young people in the UAE turn a business idea into a
+        structured business plan, a setup budget based on UAE figures, and a twelve month revenue
+        projection. There is nothing to pay at any point.
+      </p>
+      <h2>The team</h2>
+      <p><strong>Rashed Alkhyeli</strong> &mdash; Founder, Business Planner Youth Initiative.</p>
+      <p><strong>Ahmed Al Zaabi</strong> &mdash; Co-founder, Business Planner Youth Initiative.</p>
+      <p>This page needs JavaScript to run the planner itself.</p>
+    </noscript>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

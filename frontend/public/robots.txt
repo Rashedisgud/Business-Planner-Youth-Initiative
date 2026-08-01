@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# The admin screen is behind a password, but there is no reason for it to turn
+# up in search results either.
+Disallow: /#admin
+
+Sitemap: https://bypi.org/sitemap.xml

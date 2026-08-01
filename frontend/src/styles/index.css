@@ -3,14 +3,16 @@
 }
 
 :root {
-  --bg-page-1: #f6f9fb;
-  --bg-page-2: #eaf0f5;
-  --card-bg: #ffffff;
+  /* Muted rather than near-white. A page of #f8-#ff glares, especially on a
+     phone at night, and the cards need something to sit against. */
+  --bg-page-1: #e4ebf1;
+  --bg-page-2: #d6e0e9;
+  --card-bg: #f7fafc;
   --text-main: #17232e;
-  --text-muted: #5a6b7a;
-  --border-soft: #dde5ec;
+  --text-muted: #58697a;
+  --border-soft: #ccd8e2;
   --accent-1: #14607a;
-  --accent-2: #1a86a8;
+  --accent-2: #1e7c99;
   --accent-ink: #ffffff;
   /* The accent as raw channels, so shadows and focus rings can be tinted from
      the same source. They used to be hardcoded orange in a dozen places, which
@@ -18,10 +20,10 @@
   --accent-rgb: 20, 96, 122;
   --accent-2-rgb: 26, 134, 168;
   --shadow-rgb: 23, 42, 58;
-  --bot-bubble-bg: #eef3f7;
+  --bot-bubble-bg: #e7eef4;
   --bot-bubble-text: #24323d;
-  --feedback-bg: #e9f4f8;
-  --feedback-border: #a9d3e0;
+  --feedback-bg: #dfecf3;
+  --feedback-border: #9dc2d3;
   /* Muted grey drops below the 4.5 needed for body text on white. Reference
      notes are meant to be read, so they get a darker tone. */
   --hint-text: #4d6273;
@@ -36,11 +38,13 @@
     --text-main: #e8eef4;
     --text-muted: #9fb0bf;
     --border-soft: #26333f;
-    --accent-1: #4db8d4;
-    --accent-2: #2f93b0;
+    /* Was a vivid cyan that shouted against the dark background. Desaturated
+       to something closer to slate. */
+    --accent-1: #5896aa;
+    --accent-2: #3f7d92;
     --accent-ink: #0c1319;
-    --accent-rgb: 77, 184, 212;
-    --accent-2-rgb: 47, 147, 176;
+    --accent-rgb: 88, 150, 170;
+    --accent-2-rgb: 63, 125, 146;
     --shadow-rgb: 0, 0, 0;
     --bot-bubble-bg: #1c2833;
     --bot-bubble-text: #e3ebf2;

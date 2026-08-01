@@ -15,6 +15,20 @@
 
 const MONTH_COUNT = 12;
 
+/**
+ * Share of paying customers who are still there the following month.
+ *
+ * Without this the model kept every customer forever, so twelve new a month
+ * became 144 by the end of the year and the chart described a business nobody
+ * could run. Some people always leave - they finish their exams, move, or just
+ * stop - and a plan that assumes otherwise is the one that gets picked apart.
+ *
+ * 85% a month is a fair middle for a small local subscription. It is applied
+ * rather than asked about, because a first-timer has no way to estimate their
+ * own churn before they have any customers.
+ */
+const MONTHLY_RETENTION = 0.85;
+
 /** Pull a number out of free text like "around 3,000 AED per month". */
 function parseNumber(text) {
   if (typeof text !== 'string') return null;
@@ -69,11 +83,14 @@ export function computeProjection(stage3 = {}, budget = null) {
   const monthlyCosts = runningCosts + marketing + rentMonthly;
 
   const months = [];
-  let payingCustomers = 0;
+  let held = 0; // carried unrounded so the rounding doesn't drift over a year
   let cumulativeRevenue = 0;
 
   for (let m = 1; m <= MONTH_COUNT; m += 1) {
-    payingCustomers = recurring ? payingCustomers + newPerMonth : newPerMonth;
+    held = recurring ? held * MONTHLY_RETENTION + newPerMonth : newPerMonth;
+
+    // Customers are whole people, and the money follows the rounded count.
+    const payingCustomers = Math.round(held);
     const revenue = payingCustomers * price;
     cumulativeRevenue += revenue;
     months.push({
@@ -92,6 +109,7 @@ export function computeProjection(stage3 = {}, budget = null) {
     price,
     newPerMonth,
     monthlyCosts,
+    retention: MONTHLY_RETENTION,
     months,
     yearRevenue: cumulativeRevenue,
     yearCosts: monthlyCosts * MONTH_COUNT,

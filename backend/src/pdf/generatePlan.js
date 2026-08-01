@@ -508,8 +508,9 @@ export async function generatePlanPdf(session, { analysis = null, conclusion = n
     d.newPage();
     d.sectionTitle('Revenue Projection');
 
+    const churnPercent = Math.round((1 - projection.retention) * 100);
     const basis = projection.recurring
-      ? `Assumes ${projection.newPerMonth} new customers a month, each paying AED ${projection.price.toLocaleString()} every month and staying on. Revenue builds as customers accumulate.`
+      ? `Assumes ${projection.newPerMonth} new customers a month, each paying AED ${projection.price.toLocaleString()} monthly, and that about ${churnPercent} in every 100 stop each month. Numbers grow and then level off as leavers start to cancel out new arrivals.`
       : `Assumes ${projection.newPerMonth} customers a month, each paying AED ${projection.price.toLocaleString()} once. Revenue stays flat because customers are not retained.`;
     d.paragraph(basis, { gap: 6 });
     d.paragraph(
@@ -569,7 +570,7 @@ export async function generatePlanPdf(session, { analysis = null, conclusion = n
     if (projection.recurring) {
       const finalCount = projection.months[projection.months.length - 1].payingCustomers;
       d.bullet(
-        `This assumes nobody cancels, so by month 12 it has ${finalCount.toLocaleString()} customers all still paying. Check you could actually serve that many, and knock the numbers down if not.`
+        `By month 12 you would be serving about ${finalCount.toLocaleString()} customers at once. Check that is a number you could actually handle, and lower the intake if not.`
       );
     }
 

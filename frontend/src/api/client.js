@@ -71,6 +71,14 @@ export const api = {
     }),
   uploadFounderPhoto,
 
+  getContact: () => request('/api/contact'),
+  updateContact: (patch, password) =>
+    request('/api/contact', {
+      method: 'PUT',
+      headers: { 'x-admin-password': password },
+      body: JSON.stringify(patch),
+    }),
+
   listReviews: () => request('/api/reviews'),
   createReview: (review, password) =>
     request('/api/reviews', {

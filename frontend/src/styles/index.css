@@ -1340,21 +1340,77 @@ button.nav-brand {
   margin-bottom: 14px;
 }
 
-.footer-contact {
-  font-size: 13.5px;
-  color: var(--text-muted);
-  margin: 0 0 16px;
+.contact-list {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 26px;
 }
 
-.footer-contact a {
+.contact-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: 13.5px;
+}
+
+.contact-label {
+  color: var(--text-muted);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+.contact-list a {
   color: var(--accent-1);
   font-weight: 600;
   text-decoration: none;
   border-bottom: 1px solid transparent;
 }
 
-.footer-contact a:hover {
+.contact-list a:hover {
   border-bottom-color: var(--accent-1);
+}
+
+.contact-edit {
+  text-align: left;
+}
+
+.contact-field {
+  margin-bottom: 12px;
+}
+
+.contact-field label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.contact-field input {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-soft);
+  background: var(--bg-page-1);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.contact-field input:focus {
+  outline: none;
+  border-color: var(--accent-2);
+}
+
+.contact-note {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: 0 0 12px;
 }
 
 .footer-disclaimer {

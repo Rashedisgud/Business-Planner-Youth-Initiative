@@ -2,6 +2,7 @@ import { useAdminAuth } from '../state/useAdminAuth.js';
 import AdminUnlock from './AdminUnlock.jsx';
 import FounderPanel from './FounderPanel.jsx';
 import ReviewsSection from './ReviewsSection.jsx';
+import ContactPanel from './ContactPanel.jsx';
 import UaeFlagIcon from './UaeFlagIcon.jsx';
 
 export default function AdminPage({ onGoHome }) {
@@ -50,6 +51,16 @@ export default function AdminPage({ onGoHome }) {
                   heading="Meet the co-founder"
                   emptyLabel="Not filled in yet - add the co-founder's details here, or leave blank to hide."
                 />
+              </div>
+            </div>
+          </section>
+
+          <section className="section">
+            <div className="section-inner section-inner--narrow">
+              <span className="section-eyebrow">Admin</span>
+              <h2 className="section-title">Contact details</h2>
+              <div className="founder-section-card">
+                <ContactPanel editable />
               </div>
             </div>
           </section>

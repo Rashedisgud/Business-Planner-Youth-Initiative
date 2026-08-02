@@ -3,6 +3,7 @@ import cors from 'cors';
 import { sessionRouter } from './routes/session.js';
 import { pdfRouter } from './routes/pdf.js';
 import { founderRouter } from './routes/founder.js';
+import { contactRouter } from './routes/contact.js';
 import { reviewsRouter } from './routes/reviews.js';
 import { optionalAuth } from './middleware/optionalAuth.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -38,6 +39,7 @@ export function createApp() {
   app.use('/api/sessions', sessionRouter);
   app.use('/api/sessions', pdfRouter);
   app.use('/api/founder', founderRouter);
+  app.use('/api/contact', contactRouter);
   app.use('/api/reviews', reviewsRouter);
 
   app.use(errorHandler);

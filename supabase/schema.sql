@@ -51,6 +51,22 @@ insert into founder (id) values (2) on conflict (id) do nothing;
 
 alter table founder enable row level security;
 
+-- Contact details shown in the footer, editable from the admin page. One row,
+-- same as the founder table. Any field left blank is simply not displayed, so
+-- there is no need to invent a phone number to fill the section.
+create table if not exists contact (
+  id integer primary key default 1,
+  email text,
+  phone text,
+  instagram text,
+  updated_at timestamptz not null default now(),
+  constraint contact_singleton check (id = 1)
+);
+
+insert into contact (id) values (1) on conflict (id) do nothing;
+
+alter table contact enable row level security;
+
 -- Customer reviews shown on the home page. Only added/edited/removed by the
 -- admin (via ADMIN_PASSWORD) - there is no public review submission form.
 create table if not exists reviews (

@@ -1,10 +1,5 @@
 import UaeFlagIcon from './UaeFlagIcon.jsx';
-
-// Change this and the address in the mailto below stays in step. A domain
-// address rather than anyone's personal inbox: it can be pointed somewhere else
-// later without editing the site, and it keeps a private address off a public
-// page aimed at students.
-const CONTACT_EMAIL = 'hello@bypi.org';
+import ContactPanel from './ContactPanel.jsx';
 
 export default function Footer({ onAdminClick }) {
   return (
@@ -15,10 +10,9 @@ export default function Footer({ onAdminClick }) {
           <span>Business Planner Youth Initiative (BPYI)</span>
         </div>
 
-        <p className="footer-contact">
-          Questions, or something not working?{' '}
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-        </p>
+        {/* Whatever has been filled in from the admin page. Renders nothing at
+            all if none of it has, rather than an empty heading. */}
+        <ContactPanel />
 
         <p className="footer-disclaimer">
           Cost figures, license types, and other UAE-specific information shown by this tool are

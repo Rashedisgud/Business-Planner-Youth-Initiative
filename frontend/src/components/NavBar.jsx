@@ -21,6 +21,7 @@ export default function NavBar({ onStart, auth, onResumeSession }) {
           <nav className="nav-links">
             <a href="#how-it-works">How it works</a>
             <a href="#founder">Founder</a>
+            <a href="#contact">Contact</a>
           </nav>
 
           {user ? (

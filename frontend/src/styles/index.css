@@ -1366,6 +1366,42 @@ button.nav-brand {
   margin-bottom: 14px;
 }
 
+/* Sits under a section title, one step down in weight. Used by the contact
+   section and available for others later. */
+.section-lead {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.5;
+  max-width: 560px;
+  margin: -4px auto 28px;
+}
+
+/* Home-page contact card: bigger than the footer version, styled like the
+   founder card so the two sections read as a pair. */
+.contact-section-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  padding: 34px 32px;
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.contact-section-card .contact-list {
+  gap: 16px 44px;
+}
+
+.contact-section-card .contact-list li {
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px;
+}
+
+.contact-section-card .contact-label {
+  font-size: 11px;
+}
+
 .contact-list {
   list-style: none;
   margin: 0 0 18px;

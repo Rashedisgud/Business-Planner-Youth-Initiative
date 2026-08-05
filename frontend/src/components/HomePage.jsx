@@ -4,6 +4,7 @@ import HowItWorks from './HowItWorks.jsx';
 import Features from './Features.jsx';
 import ReviewsSection from './ReviewsSection.jsx';
 import FounderSection from './FounderSection.jsx';
+import ContactSection from './ContactSection.jsx';
 import Footer from './Footer.jsx';
 
 export default function HomePage({ onStart, auth, onResumeSession, onAdminClick }) {
@@ -15,6 +16,7 @@ export default function HomePage({ onStart, auth, onResumeSession, onAdminClick 
       <Features />
       <ReviewsSection />
       <FounderSection />
+      <ContactSection />
       <Footer onAdminClick={onAdminClick} />
     </div>
   );
